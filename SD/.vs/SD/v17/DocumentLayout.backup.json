@@ -1,12 +1,7 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\35196\\Desktop\\UTAD\\3 ano\\2 semestre\\sistemas distribuidos\\SD\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{B83A7EF8-EB90-47AC-AEDC-C370223C9BFA}|SD.csproj|c:\\users\\35196\\desktop\\utad\\3 ano\\2 semestre\\sistemas distribuidos\\sd\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B83A7EF8-EB90-47AC-AEDC-C370223C9BFA}|SD.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "WorkspaceRootPath": "C:\\Users\\35196\\Desktop\\testesd\\SD\\",
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -23,19 +18,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\35196\\Desktop\\UTAD\\3 ano\\2 semestre\\sistemas distribuidos\\SD\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\35196\\Desktop\\UTAD\\3 ano\\2 semestre\\sistemas distribuidos\\SD\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-31T13:36:56.809Z",
-              "EditorCaption": ""
             }
           ]
         }
