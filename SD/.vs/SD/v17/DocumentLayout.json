@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\35196\\Desktop\\testesd\\SD\\",
+  "WorkspaceRootPath": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\",
   "Documents": [],
   "DocumentGroupContainers": [
     {
@@ -18,6 +18,10 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             }
           ]
         }
