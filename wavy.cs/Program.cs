@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 
+/*//WAVY FASE3
 using System;
 using System.Net.Sockets;
 using System.Text;
@@ -39,3 +40,31 @@ class Wavy
         return Encoding.UTF8.GetString(buffer, 0, length).Trim();
     }
 }
+FASE2 */
+using System;
+using System.IO;
+using System.Net.Sockets;
+
+class Wavy
+{
+    static void Main()
+    {
+        Console.Write("[WAVY] Introduz o ID da WAVY: ");
+        string id = Console.ReadLine();
+
+        TcpClient client = new TcpClient("127.0.0.1", 5000);
+        StreamReader reader = new StreamReader(client.GetStream());
+        StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
+
+        writer.WriteLine("HELLO " + id);
+        string response = reader.ReadLine();
+        Console.WriteLine("[WAVY] Resposta do AGREGADOR: " + response);
+
+        Console.WriteLine("[WAVY] Pressiona Enter para sair...");
+        Console.ReadLine();
+
+        writer.WriteLine("QUIT");
+        client.Close();
+    }
+}
+

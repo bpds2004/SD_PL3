@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 
-// AGREGADOR/Program.cs
-using System;
+// FASE3/AGREGADOR/Program.cs
+/*using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -81,3 +81,64 @@ class Program
         Console.WriteLine("<< Resposta do SERVIDOR: " + response);
     }
 }
+FASE2*/
+using System;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+
+class Agregador
+{
+    static void Main()
+    {
+        TcpListener listener = new TcpListener(IPAddress.Any, 5000);
+        listener.Start();
+        Console.WriteLine("[AGREGADOR] À espera da WAVY na porta 5000...");
+
+        while (true)
+        {
+            TcpClient wavy = listener.AcceptTcpClient();
+            Console.WriteLine("[AGREGADOR] WAVY conectada.");
+            StreamReader wavyReader = new StreamReader(wavy.GetStream());
+            StreamWriter wavyWriter = new StreamWriter(wavy.GetStream()) { AutoFlush = true };
+
+            string hello = wavyReader.ReadLine();
+            Console.WriteLine($"[AGREGADOR] Recebido da WAVY: {hello}");
+            if (hello.StartsWith("HELLO"))
+            {
+                string id = hello.Split(' ')[1];
+                wavyWriter.WriteLine("100 OK");
+
+                TcpClient servidor = new TcpClient("127.0.0.1", 6000);
+                StreamReader srvReader = new StreamReader(servidor.GetStream());
+                StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
+
+                srvWriter.WriteLine("REGISTER " + id);
+                string regResp = srvReader.ReadLine();
+                Console.WriteLine($"[AGREGADOR] Resposta do SERVIDOR: {regResp}");
+
+                servidor.Close();
+            }
+
+            string quit = wavyReader.ReadLine();
+            Console.WriteLine($"[AGREGADOR] WAVY diz: {quit}");
+            if (quit == "QUIT")
+            {
+                string id = hello.Split(' ')[1];
+                TcpClient servidor = new TcpClient("127.0.0.1", 6000);
+                StreamReader srvReader = new StreamReader(servidor.GetStream());
+                StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
+
+                srvWriter.WriteLine("DISCONNECT " + id);
+                string byeResp = srvReader.ReadLine();
+                Console.WriteLine($"[AGREGADOR] SERVIDOR respondeu: {byeResp}");
+
+                servidor.Close();
+            }
+
+            wavy.Close();
+        }
+    }
+}
+
+

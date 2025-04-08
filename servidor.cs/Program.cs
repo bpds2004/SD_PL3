@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 
-// SERVIDOR/Program.cs
-using System;
+// FASE 3/SERVIDOR/Program.cs
+/*using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -54,3 +54,38 @@ class Program
         stream.Write(data, 0, data.Length);
     }
 }
+FASE2
+*/
+using System;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+
+class Servidor
+{
+    static void Main()
+    {
+        TcpListener listener = new TcpListener(IPAddress.Any, 6000);
+        listener.Start();
+        Console.WriteLine("[SERVIDOR] A ouvir na porta 6000...");
+
+        while (true)
+        {
+            TcpClient client = listener.AcceptTcpClient();
+            Console.WriteLine("[SERVIDOR] Ligado ao AGREGADOR.");
+            StreamReader reader = new StreamReader(client.GetStream());
+            StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
+
+            string msg = reader.ReadLine();
+            Console.WriteLine($"[SERVIDOR] Recebido: {msg}");
+
+            if (msg.StartsWith("REGISTER"))
+                writer.WriteLine("200 REGISTERED");
+            else if (msg.StartsWith("DISCONNECT"))
+                writer.WriteLine("400 BYE");
+
+            client.Close();
+        }
+    }
+}
+
