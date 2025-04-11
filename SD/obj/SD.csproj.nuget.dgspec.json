@@ -11,7 +11,7 @@
         "projectName": "SD",
         "projectPath": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\SD.csproj",
         "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\maria\\Source\\Repos\\SD_PL3\\SD\\obj\\",
+        "outputPath": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -49,6 +49,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "System.Data.SQLite": {
+              "target": "Package",
+              "version": "[1.0.119, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
