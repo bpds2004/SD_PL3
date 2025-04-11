@@ -60,6 +60,22 @@ class Wavy
         string response = reader.ReadLine();
         Console.WriteLine("[WAVY] Resposta do AGREGADOR: " + response);
 
+        // ====== DADOS PARA A FASE 3 ======
+        // Simular envio de dados (podes adaptar isto mais tarde)
+        string[] dados = new string[]
+        {
+            "temperatura:22.5",
+            "humidade:45",
+            "pressao:1012"
+        };
+
+        writer.WriteLine($"DATA_BULK {id} {dados.Length}");
+        foreach (string dado in dados)
+        {
+            writer.WriteLine(dado);
+        }
+
+        // Espera para encerrar
         Console.WriteLine("[WAVY] Pressiona Enter para sair...");
         Console.ReadLine();
 
@@ -67,4 +83,3 @@ class Wavy
         client.Close();
     }
 }
-

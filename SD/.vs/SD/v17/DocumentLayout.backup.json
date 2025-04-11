@@ -3,13 +3,13 @@
   "WorkspaceRootPath": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B8E299B5-08C2-409C-B0A0-5D99557A89ED}|..\\wavy.cs\\wavy.cs.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\wavy.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B8E299B5-08C2-409C-B0A0-5D99557A89ED}|..\\wavy.cs\\Wavy.cs.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\wavy.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BFA3203F-0CA3-4AE0-BC11-F8849D431B5A}|..\\agregador.cs\\AGREGADOR.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\agregador.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BFA3203F-0CA3-4AE0-BC11-F8849D431B5A}|..\\agregador.cs\\Agregador.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\agregador.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B7765585-4E33-4D12-8DA9-FF596B4E07BE}|..\\servidor.cs\\SERVIDOR.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\servidor.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B7765585-4E33-4D12-8DA9-FF596B4E07BE}|..\\servidor.cs\\Servidor.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\servidor.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,8 +19,16 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -29,7 +37,7 @@
               "RelativeDocumentMoniker": "..\\wavy.cs\\Program.cs",
               "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\wavy.cs\\Program.cs",
               "RelativeToolTip": "..\\wavy.cs\\Program.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAAIwEUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADAAAAAAAAAAAADwv1UAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-07T14:14:31.875Z",
               "EditorCaption": ""
@@ -42,22 +50,10 @@
               "RelativeDocumentMoniker": "..\\agregador.cs\\Program.cs",
               "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\agregador.cs\\Program.cs",
               "RelativeToolTip": "..\\agregador.cs\\Program.cs",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAAAFEAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAwwK8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-07T14:06:24.69Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
@@ -65,9 +61,9 @@
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\Program.cs",
               "RelativeDocumentMoniker": "..\\servidor.cs\\Program.cs",
-              "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\Program.cs*",
-              "RelativeToolTip": "..\\servidor.cs\\Program.cs*",
-              "ViewState": "AgIAAFIAAAAAAAAAAAAQwFoAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\Program.cs",
+              "RelativeToolTip": "..\\servidor.cs\\Program.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAHgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-07T14:06:33.139Z",
               "EditorCaption": ""

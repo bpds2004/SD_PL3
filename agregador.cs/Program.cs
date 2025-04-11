@@ -104,9 +104,11 @@ class Agregador
 
             string hello = wavyReader.ReadLine();
             Console.WriteLine($"[AGREGADOR] Recebido da WAVY: {hello}");
+            string id = "";
+
             if (hello.StartsWith("HELLO"))
             {
-                string id = hello.Split(' ')[1];
+                id = hello.Split(' ')[1];
                 wavyWriter.WriteLine("100 OK");
 
                 TcpClient servidor = new TcpClient("127.0.0.1", 6000);
@@ -120,11 +122,42 @@ class Agregador
                 servidor.Close();
             }
 
+            // ===================== FASE 3: Receber e encaminhar dados =====================
+            string dataBulkHeader = wavyReader.ReadLine();
+            if (dataBulkHeader.StartsWith("DATA_BULK"))
+            {
+                string[] headerParts = dataBulkHeader.Split(' ');
+                string wavyId = headerParts[1];
+                int n_dados = int.Parse(headerParts[2]);
+
+                string[] dados = new string[n_dados];
+                for (int i = 0; i < n_dados; i++)
+                {
+                    dados[i] = wavyReader.ReadLine();
+                }
+
+                // Enviar para o SERVIDOR
+                TcpClient servidor = new TcpClient("127.0.0.1", 6000);
+                StreamReader srvReader = new StreamReader(servidor.GetStream());
+                StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
+
+                srvWriter.WriteLine($"FORWARD_BULK {wavyId} {n_dados}");
+                foreach (string dado in dados)
+                {
+                    srvWriter.WriteLine(dado);
+                }
+
+                string bulkResp = srvReader.ReadLine();
+                Console.WriteLine($"[AGREGADOR] SERVIDOR respondeu: {bulkResp}");
+
+                servidor.Close();
+            }
+            // ===================== FIM DA FASE 3 =====================
+
             string quit = wavyReader.ReadLine();
             Console.WriteLine($"[AGREGADOR] WAVY diz: {quit}");
             if (quit == "QUIT")
             {
-                string id = hello.Split(' ')[1];
                 TcpClient servidor = new TcpClient("127.0.0.1", 6000);
                 StreamReader srvReader = new StreamReader(servidor.GetStream());
                 StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
@@ -140,5 +173,6 @@ class Agregador
         }
     }
 }
+
 
 

@@ -80,12 +80,41 @@ class Servidor
             Console.WriteLine($"[SERVIDOR] Recebido: {msg}");
 
             if (msg.StartsWith("REGISTER"))
+            {
                 writer.WriteLine("200 REGISTERED");
+            }
             else if (msg.StartsWith("DISCONNECT"))
+            {
                 writer.WriteLine("400 BYE");
+            }
+
+            // ===================== FASE 3: Receber dados do AGREGADOR =====================
+            else if (msg.StartsWith("FORWARD_BULK"))
+            {
+                string[] parts = msg.Split(' ');
+                string id = parts[1];
+                int n_dados = int.Parse(parts[2]);
+
+                string[] dados = new string[n_dados];
+                for (int i = 0; i < n_dados; i++)
+                {
+                    dados[i] = reader.ReadLine();
+                }
+
+                // Aqui poderias fazer pré-processamento, armazenamento em ficheiro, etc.
+                Console.WriteLine($"[SERVIDOR] Dados recebidos da WAVY {id}:");
+                foreach (string d in dados)
+                {
+                    Console.WriteLine("  " + d);
+                    // Exemplo: File.AppendAllText($"dados_{id}.txt", d + Environment.NewLine);
+                }
+
+                // Confirma ao agregador que os dados foram armazenados
+                writer.WriteLine("301 BULK_STORED");
+            }
+            // ===================== FIM DA FASE 3 =====================
 
             client.Close();
         }
     }
 }
-
