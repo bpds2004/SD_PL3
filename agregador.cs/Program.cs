@@ -86,6 +86,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 class Agregador
 {
@@ -98,81 +99,88 @@ class Agregador
         while (true)
         {
             TcpClient wavy = listener.AcceptTcpClient();
-            Console.WriteLine("[AGREGADOR] WAVY conectada.");
-            StreamReader wavyReader = new StreamReader(wavy.GetStream());
-            StreamWriter wavyWriter = new StreamWriter(wavy.GetStream()) { AutoFlush = true };
 
-            string hello = wavyReader.ReadLine();
-            Console.WriteLine($"[AGREGADOR] Recebido da WAVY: {hello}");
-            string id = "";
-
-            if (hello.StartsWith("HELLO"))
-            {
-                id = hello.Split(' ')[1];
-                wavyWriter.WriteLine("100 OK");
-
-                TcpClient servidor = new TcpClient("127.0.0.1", 6000);
-                StreamReader srvReader = new StreamReader(servidor.GetStream());
-                StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
-
-                srvWriter.WriteLine("REGISTER " + id);
-                string regResp = srvReader.ReadLine();
-                Console.WriteLine($"[AGREGADOR] Resposta do SERVIDOR: {regResp}");
-
-                servidor.Close();
-            }
-
-            // ===================== FASE 3: Receber e encaminhar dados =====================
-            string dataBulkHeader = wavyReader.ReadLine();
-            if (dataBulkHeader.StartsWith("DATA_BULK"))
-            {
-                string[] headerParts = dataBulkHeader.Split(' ');
-                string wavyId = headerParts[1];
-                int n_dados = int.Parse(headerParts[2]);
-
-                string[] dados = new string[n_dados];
-                for (int i = 0; i < n_dados; i++)
-                {
-                    dados[i] = wavyReader.ReadLine();
-                }
-
-                // Enviar para o SERVIDOR
-                TcpClient servidor = new TcpClient("127.0.0.1", 6000);
-                StreamReader srvReader = new StreamReader(servidor.GetStream());
-                StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
-
-                srvWriter.WriteLine($"FORWARD_BULK {wavyId} {n_dados}");
-                foreach (string dado in dados)
-                {
-                    srvWriter.WriteLine(dado);
-                }
-
-                string bulkResp = srvReader.ReadLine();
-                Console.WriteLine($"[AGREGADOR] SERVIDOR respondeu: {bulkResp}");
-
-                servidor.Close();
-            }
-            // ===================== FIM DA FASE 3 =====================
-
-            string quit = wavyReader.ReadLine();
-            Console.WriteLine($"[AGREGADOR] WAVY diz: {quit}");
-            if (quit == "QUIT")
-            {
-                TcpClient servidor = new TcpClient("127.0.0.1", 6000);
-                StreamReader srvReader = new StreamReader(servidor.GetStream());
-                StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
-
-                srvWriter.WriteLine("DISCONNECT " + id);
-                string byeResp = srvReader.ReadLine();
-                Console.WriteLine($"[AGREGADOR] SERVIDOR respondeu: {byeResp}");
-
-                servidor.Close();
-            }
-
-            wavy.Close();
+            // ===================== FASE 4: Atendimento concorrente com Threads =====================
+            Thread t = new Thread(() => TratarWavy(wavy));
+            t.Start();
         }
     }
-}
 
+    static void TratarWavy(TcpClient wavy)
+    {
+        Console.WriteLine("[AGREGADOR] WAVY conectada.");
+        StreamReader wavyReader = new StreamReader(wavy.GetStream());
+        StreamWriter wavyWriter = new StreamWriter(wavy.GetStream()) { AutoFlush = true };
+
+        string hello = wavyReader.ReadLine();
+        Console.WriteLine($"[AGREGADOR] Recebido da WAVY: {hello}");
+        string id = "";
+
+        if (hello.StartsWith("HELLO"))
+        {
+            id = hello.Split(' ')[1];
+            wavyWriter.WriteLine("100 OK");
+
+            TcpClient servidor = new TcpClient("127.0.0.1", 6000);
+            StreamReader srvReader = new StreamReader(servidor.GetStream());
+            StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
+
+            srvWriter.WriteLine("REGISTER " + id);
+            string regResp = srvReader.ReadLine();
+            Console.WriteLine($"[AGREGADOR] Resposta do SERVIDOR: {regResp}");
+
+            servidor.Close();
+        }
+
+        // ===================== FASE 3: Receber e encaminhar dados =====================
+        string dataBulkHeader = wavyReader.ReadLine();
+        if (dataBulkHeader.StartsWith("DATA_BULK"))
+        {
+            string[] headerParts = dataBulkHeader.Split(' ');
+            string wavyId = headerParts[1];
+            int n_dados = int.Parse(headerParts[2]);
+
+            string[] dados = new string[n_dados];
+            for (int i = 0; i < n_dados; i++)
+            {
+                dados[i] = wavyReader.ReadLine();
+            }
+
+            // Enviar para o SERVIDOR
+            TcpClient servidor = new TcpClient("127.0.0.1", 6000);
+            StreamReader srvReader = new StreamReader(servidor.GetStream());
+            StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
+
+            srvWriter.WriteLine($"FORWARD_BULK {wavyId} {n_dados}");
+            foreach (string dado in dados)
+            {
+                srvWriter.WriteLine(dado);
+            }
+
+            string bulkResp = srvReader.ReadLine();
+            Console.WriteLine($"[AGREGADOR] SERVIDOR respondeu: {bulkResp}");
+
+            servidor.Close();
+        }
+        // ===================== FIM DA FASE 3 =====================
+
+        string quit = wavyReader.ReadLine();
+        Console.WriteLine($"[AGREGADOR] WAVY diz: {quit}");
+        if (quit == "QUIT")
+        {
+            TcpClient servidor = new TcpClient("127.0.0.1", 6000);
+            StreamReader srvReader = new StreamReader(servidor.GetStream());
+            StreamWriter srvWriter = new StreamWriter(servidor.GetStream()) { AutoFlush = true };
+
+            srvWriter.WriteLine("DISCONNECT " + id);
+            string byeResp = srvReader.ReadLine();
+            Console.WriteLine($"[AGREGADOR] SERVIDOR respondeu: {byeResp}");
+
+            servidor.Close();
+        }
+
+        wavy.Close();
+    }
+}
 
 

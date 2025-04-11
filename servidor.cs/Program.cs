@@ -60,9 +60,12 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 class Servidor
 {
+    static readonly object lockFicheiro = new object(); // ===================== FASE 4: Mutex para acesso sequencial ao ficheiro =====================
+
     static void Main()
     {
         TcpListener listener = new TcpListener(IPAddress.Any, 6000);
@@ -72,49 +75,68 @@ class Servidor
         while (true)
         {
             TcpClient client = listener.AcceptTcpClient();
-            Console.WriteLine("[SERVIDOR] Ligado ao AGREGADOR.");
-            StreamReader reader = new StreamReader(client.GetStream());
-            StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
 
-            string msg = reader.ReadLine();
-            Console.WriteLine($"[SERVIDOR] Recebido: {msg}");
-
-            if (msg.StartsWith("REGISTER"))
-            {
-                writer.WriteLine("200 REGISTERED");
-            }
-            else if (msg.StartsWith("DISCONNECT"))
-            {
-                writer.WriteLine("400 BYE");
-            }
-
-            // ===================== FASE 3: Receber dados do AGREGADOR =====================
-            else if (msg.StartsWith("FORWARD_BULK"))
-            {
-                string[] parts = msg.Split(' ');
-                string id = parts[1];
-                int n_dados = int.Parse(parts[2]);
-
-                string[] dados = new string[n_dados];
-                for (int i = 0; i < n_dados; i++)
-                {
-                    dados[i] = reader.ReadLine();
-                }
-
-                // Aqui poderias fazer pré-processamento, armazenamento em ficheiro, etc.
-                Console.WriteLine($"[SERVIDOR] Dados recebidos da WAVY {id}:");
-                foreach (string d in dados)
-                {
-                    Console.WriteLine("  " + d);
-                    // Exemplo: File.AppendAllText($"dados_{id}.txt", d + Environment.NewLine);
-                }
-
-                // Confirma ao agregador que os dados foram armazenados
-                writer.WriteLine("301 BULK_STORED");
-            }
-            // ===================== FIM DA FASE 3 =====================
-
-            client.Close();
+            // ===================== FASE 4: Atendimento concorrente com Threads =====================
+            Thread t = new Thread(() => TratarCliente(client));
+            t.Start();
         }
     }
+
+    static void TratarCliente(TcpClient client)
+    {
+        Console.WriteLine("[SERVIDOR] Ligado ao AGREGADOR.");
+        StreamReader reader = new StreamReader(client.GetStream());
+        StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
+
+        string msg = reader.ReadLine();
+        Console.WriteLine($"[SERVIDOR] Recebido: {msg}");
+
+        if (msg.StartsWith("REGISTER"))
+        {
+            writer.WriteLine("200 REGISTERED");
+        }
+        else if (msg.StartsWith("DISCONNECT"))
+        {
+            writer.WriteLine("400 BYE");
+        }
+
+        // ===================== FASE 3: Receber dados do AGREGADOR =====================
+        else if (msg.StartsWith("FORWARD_BULK"))
+        {
+            string[] parts = msg.Split(' ');
+            string id = parts[1];
+            int n_dados = int.Parse(parts[2]);
+
+            string[] dados = new string[n_dados];
+            for (int i = 0; i < n_dados; i++)
+            {
+                dados[i] = reader.ReadLine();
+            }
+
+            Console.WriteLine($"[SERVIDOR] Dados recebidos da WAVY {id}:");
+            foreach (string d in dados)
+            {
+                Console.WriteLine("  " + d);
+            }
+
+            // ===================== FASE 4: Escrita protegida por mutex =====================
+            lock (lockFicheiro)
+            {
+                string ficheiro = $"dados_{id}.txt";
+                using (StreamWriter sw = new StreamWriter(ficheiro, append: true))
+                {
+                    foreach (string linha in dados)
+                    {
+                        sw.WriteLine(linha);
+                    }
+                }
+            }
+
+            writer.WriteLine("301 BULK_STORED");
+        }
+        // ===================== FIM DA FASE 3 =====================
+
+        client.Close();
+    }
 }
+
