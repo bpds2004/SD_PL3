@@ -61,12 +61,12 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-
+using ClosedXML.Excel; // ===================== FASE 5: Biblioteca para manipular ficheiros Excel =====================
 
 class Servidor
 {
-  
-static readonly object lockFicheiro = new object(); // ===================== FASE 4: Mutex para acesso sequencial ao ficheiro =====================
+    // ===================== FASE 4: Mutex para acesso sequencial ao ficheiro =====================
+    static readonly object lockFicheiro = new object();
 
     static void Main()
     {
@@ -124,15 +124,53 @@ static readonly object lockFicheiro = new object(); // ===================== FAS
             // ===================== FASE 4: Escrita protegida por mutex =====================
             lock (lockFicheiro)
             {
-                string ficheiro = $"dados_{id}.txt";
-                using (StreamWriter sw = new StreamWriter(ficheiro, append: true))
+                // ===================== FASE 4: Guardar dados num ficheiro de texto =====================
+                string ficheiroTxt = $"dados_{id}.txt";
+                using (StreamWriter sw = new StreamWriter(ficheiroTxt, append: true))
                 {
                     foreach (string linha in dados)
                     {
                         sw.WriteLine(linha);
                     }
                 }
-               
+
+                // ===================== FASE 5: Guardar dados num ficheiro Excel =====================
+                string ficheiroExcel = "dadosTP1.xlsx";
+
+                XLWorkbook workbook;
+                IXLWorksheet worksheet;
+
+                // Verifica se o ficheiro Excel já existe
+                if (File.Exists(ficheiroExcel))
+                {
+                    workbook = new XLWorkbook(ficheiroExcel);
+                    worksheet = workbook.Worksheet(1);
+                }
+                else
+                {
+                    workbook = new XLWorkbook();
+                    worksheet = workbook.Worksheets.Add("Registos");
+
+                    // Cabeçalhos na primeira linha
+                    worksheet.Cell(1, 1).Value = "ID";
+                    worksheet.Cell(1, 2).Value = "Dado";
+                    worksheet.Cell(1, 3).Value = "DataHora";
+                }
+
+                // Determina a próxima linha disponível
+                int ultimaLinha = worksheet.LastRowUsed()?.RowNumber() ?? 1;
+
+                // Escreve os dados no Excel
+                foreach (string linha in dados)
+                {
+                    ultimaLinha++;
+                    worksheet.Cell(ultimaLinha, 1).Value = id;
+                    worksheet.Cell(ultimaLinha, 2).Value = linha;
+                    worksheet.Cell(ultimaLinha, 3).Value = DateTime.Now;
+                }
+
+                // Guarda o ficheiro Excel
+                workbook.SaveAs(ficheiroExcel);
             }
 
             writer.WriteLine("301 BULK_STORED");
@@ -142,4 +180,3 @@ static readonly object lockFicheiro = new object(); // ===================== FAS
         client.Close();
     }
 }
-
