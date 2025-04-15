@@ -61,38 +61,15 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-//using System.Data.SQLite;
+
 
 class Servidor
 {
-    /* static void InicializarBaseDados()
-     {
-         if (!File.Exists("dados.db"))
-         {
-             SQLiteConnection.CreateFile("dados.db");
-         }
-
-         using (var con = new SQLiteConnection("Data Source=dados.db"))
-         {
-             con.Open();
-             string sql = @"CREATE TABLE IF NOT EXISTS Registos (
-                             Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                             WavyId TEXT,
-                             Dado TEXT,
-                             DataHora DATETIME DEFAULT CURRENT_TIMESTAMP
-                        )";
-             using (var cmd = new SQLiteCommand(sql, con))
-             {
-                 cmd.ExecuteNonQuery();
-             }
-         }
-         
-}*/
+  
 static readonly object lockFicheiro = new object(); // ===================== FASE 4: Mutex para acesso sequencial ao ficheiro =====================
 
     static void Main()
     {
-        //InicializarBaseDados();
         TcpListener listener = new TcpListener(IPAddress.Any, 6000);
         listener.Start();
         Console.WriteLine("[SERVIDOR] A ouvir na porta 6000...");
@@ -155,20 +132,7 @@ static readonly object lockFicheiro = new object(); // ===================== FAS
                         sw.WriteLine(linha);
                     }
                 }
-                /*using (var con = new SQLiteConnection("Data Source=dados.db"))
-                {
-                    con.Open();
-                    foreach (string linha in dados)
-                    {
-                        string insertSql = "INSERT INTO Registos (WavyId, Dado) VALUES (@id, @dado)";
-                        using (var cmd = new SQLiteCommand(insertSql, con))
-                        {
-                            cmd.Parameters.AddWithValue("@id", id);
-                            cmd.Parameters.AddWithValue("@dado", linha);
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                }*/
+               
             }
 
             writer.WriteLine("301 BULK_STORED");
