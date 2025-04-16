@@ -1,85 +1,146 @@
-﻿// See https://aka.ms/new-console-template for more information
-//Console.WriteLine("Hello, World!");
+﻿//using System;                      // Importa funcionalidades básicas como Console
+//using System.IO;                   // Permite ler e escrever em streams
+//using System.Net.Sockets;         // Necessário para comunicação TCP/IP
 
-/*//WAVY FASE3
-using System;
-using System.Net.Sockets;
-using System.Text;
+//class Wavy
+//{
+//    static void Main()
+//    {
+//        // Pede ao utilizador o ID da WAVY
+//        Console.Write("[WAVY] Introduz o ID da WAVY: ");
+//        string id = Console.ReadLine();  // Lê o ID introduzido
 
-class Wavy
-{
-    static void Main()
-    {
-        string wavyId = "WAVY123";
-        string ip = "127.0.0.1";
-        int port = 5000;
+//        // ===================== FASE 2 =====================
+//        // Cria ligação ao Agregador na porta 5000
+//        TcpClient client = new TcpClient("127.0.0.1", 5000);
+//        // Cria leitor e escritor para o stream de comunicação
+//        StreamReader reader = new StreamReader(client.GetStream());
+//        StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
 
-        using TcpClient client = new TcpClient(ip, port);
-        using NetworkStream stream = client.GetStream();
+//        // Envia mensagem de apresentação (HELLO)
+//        writer.WriteLine("HELLO " + id);
+//        // Aguarda e imprime a resposta do Agregador
+//        string response = reader.ReadLine();
+//        Console.WriteLine("[WAVY] Resposta do AGREGADOR: " + response);
 
-        Enviar(stream, $"HELLO {wavyId}");
-        Console.WriteLine("<< " + Ler(stream));
 
-        Enviar(stream, $"DATA_BULK {wavyId}\n2\ntemperatura:22.5\nsalinidade:36.1");
-        Console.WriteLine("<< " + Ler(stream));
+//        // ===================== FASE 3 =====================
+//        // Simula dados sensoriais
+//        string[] dados = new string[]
+//        {
+//            "temperatura:22.5",
+//            "humidade:45",
+//            "pressao:1012"
+//        };
 
-        Enviar(stream, "QUIT");
-        Console.WriteLine("<< " + Ler(stream));
-    }
+//        // Envia cabeçalho com o número de dados
+//        writer.WriteLine($"DATA_BULK {id} {dados.Length}");
 
-    static void Enviar(NetworkStream stream, string msg)
-    {
-        byte[] data = Encoding.UTF8.GetBytes(msg + "\n");
-        stream.Write(data, 0, data.Length);
-    }
+//        // Envia cada linha de dados
+//        foreach (string dado in dados)
+//        {
+//            writer.WriteLine(dado);
+//        }
 
-    static string Ler(NetworkStream stream)
-    {
-        byte[] buffer = new byte[1024];
-        int length = stream.Read(buffer, 0, buffer.Length);
-        return Encoding.UTF8.GetString(buffer, 0, length).Trim();
-    }
-}
-FASE2 */
+//        // Aguarda input antes de encerrar
+//        Console.WriteLine("[WAVY] Pressiona Enter para sair...");
+//        Console.ReadLine();
+
+//        // Envia mensagem de encerramento
+//        writer.WriteLine("QUIT");
+//        client.Close(); // Fecha ligação TCP
+//    }
+//}
 using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Collections.Generic;
 
 class Wavy
 {
     static void Main()
     {
-        Console.Write("[WAVY] Introduz o ID da WAVY: ");
-        string id = Console.ReadLine();
+        string ipAgregador = "127.0.0.1";
 
-        TcpClient client = new TcpClient("127.0.0.1", 5000);
-        StreamReader reader = new StreamReader(client.GetStream());
-        StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
+        Console.Write("[WAVY] Quantas WAVYs pretende criar? ");
+        int numWavys = int.Parse(Console.ReadLine());
 
-        writer.WriteLine("HELLO " + id);
-        string response = reader.ReadLine();
-        Console.WriteLine("[WAVY] Resposta do AGREGADOR: " + response);
+        // Listas para guardar os dados de configuração
+        List<string> ids = new List<string>();
+        List<int> portas = new List<int>();
 
-        // ====== DADOS PARA A FASE 3 ======
-        // Simular envio de dados (podes adaptar isto mais tarde)
-        string[] dados = new string[]
+        // Fase de recolha de dados
+        for (int i = 1; i <= numWavys; i++)
         {
-            "temperatura:22.5",
-            "humidade:45",
-            "pressao:1012"
-        };
+            Console.WriteLine($"\n[WAVY] --- Configuração da WAVY #{i} ---");
 
-        writer.WriteLine($"DATA_BULK {id} {dados.Length}");
-        foreach (string dado in dados)
-        {
-            writer.WriteLine(dado);
+            Console.Write("[WAVY] Introduz o ID da WAVY: ");
+            string id = Console.ReadLine();
+            ids.Add(id);
+
+            Console.Write("[WAVY] Introduz a PORTA do Agregador: ");
+            int porta = int.Parse(Console.ReadLine());
+            portas.Add(porta);
         }
 
-        // Espera para encerrar
-        Console.WriteLine("[WAVY] Pressiona Enter para sair...");
-        Console.ReadLine();
+        // Fase de execução para cada WAVY
+        for (int i = 0; i < numWavys; i++)
+        {
+            string id = ids[i];
+            int porta = portas[i];
 
-        writer.WriteLine("QUIT");
-        client.Close();
+            Console.WriteLine();
+
+            try
+            {
+                // ===================== FASE 2 =====================
+                TcpClient client = new TcpClient(ipAgregador, porta);
+                StreamReader reader = new StreamReader(client.GetStream());
+                StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
+
+                Console.WriteLine($"[WAVY:{id}] Ligado ao Agregador. Enviando HELLO...");
+                writer.WriteLine("HELLO " + id);
+                string response = reader.ReadLine();
+                Console.WriteLine($"[WAVY:{id}] Resposta do AGREGADOR: " + response);
+
+                // ===================== FASE 3 =====================
+                Console.WriteLine($"[WAVY:{id}] Enviando dados de sensores...");
+                string[] dados = new string[]
+                {
+                    "temperatura:22.5",
+                    "humidade:45",
+                    "pressao:1012"
+                };
+
+                writer.WriteLine($"DATA_BULK {id} {dados.Length}");
+
+                foreach (string dado in dados)
+                {
+                    Console.WriteLine($"[WAVY:{id}] Enviando: " + dado);
+                    writer.WriteLine(dado);
+                }
+
+                // Aguarda input antes de encerrar
+                Console.WriteLine($"[WAVY:{id}] Pressiona Enter para continuar...");
+                Console.ReadLine();
+
+                // ===================== FASE 4 =====================
+                Console.WriteLine($"[WAVY:{id}] Enviando mensagem de desconexão...");
+                writer.WriteLine("QUIT");
+
+                string quitResponse = reader.ReadLine();
+                Console.WriteLine($"[WAVY:{id}] Resposta do AGREGADOR: " + quitResponse);
+
+                client.Close();
+                Console.WriteLine($"[WAVY:{id}] Conexão encerrada.\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WAVY:{id}] Erro: {ex.Message}");
+            }
+        }
+
+        Console.WriteLine("\n[WAVY] Todas as WAVYs terminaram. Pressiona Enter para sair...");
+        Console.ReadLine();
     }
 }
