@@ -121,7 +121,7 @@ class Wavy
             string pressao = ObterValor(dados, "pressao");
             string dataHora = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            sw.WriteLine($"{dataHora},{id},{porta},{temperatura},{humidade},{pressao}");
+            sw.WriteLine($"{id},{porta},{temperatura},{humidade},{pressao},{dataHora}");
         }
     }
 

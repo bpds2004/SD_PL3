@@ -8,7 +8,7 @@ class Agregador
 {
     static void Main()
     {
-        Console.Write("[AGREGADOR] Quantos Agregadores deseja iniciar? ");
+        Console.Write("[AGREGADOR] Quantos Agregadores pretende criar? ");
         int numAgregadores = int.Parse(Console.ReadLine());
 
         int[] portas = new int[numAgregadores];
