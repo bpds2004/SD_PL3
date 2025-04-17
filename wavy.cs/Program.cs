@@ -1,57 +1,4 @@
-﻿//using System;                      // Importa funcionalidades básicas como Console
-//using System.IO;                   // Permite ler e escrever em streams
-//using System.Net.Sockets;         // Necessário para comunicação TCP/IP
-
-//class Wavy
-//{
-//    static void Main()
-//    {
-//        // Pede ao utilizador o ID da WAVY
-//        Console.Write("[WAVY] Introduz o ID da WAVY: ");
-//        string id = Console.ReadLine();  // Lê o ID introduzido
-
-//        // ===================== FASE 2 =====================
-//        // Cria ligação ao Agregador na porta 5000
-//        TcpClient client = new TcpClient("127.0.0.1", 5000);
-//        // Cria leitor e escritor para o stream de comunicação
-//        StreamReader reader = new StreamReader(client.GetStream());
-//        StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
-
-//        // Envia mensagem de apresentação (HELLO)
-//        writer.WriteLine("HELLO " + id);
-//        // Aguarda e imprime a resposta do Agregador
-//        string response = reader.ReadLine();
-//        Console.WriteLine("[WAVY] Resposta do AGREGADOR: " + response);
-
-
-//        // ===================== FASE 3 =====================
-//        // Simula dados sensoriais
-//        string[] dados = new string[]
-//        {
-//            "temperatura:22.5",
-//            "humidade:45",
-//            "pressao:1012"
-//        };
-
-//        // Envia cabeçalho com o número de dados
-//        writer.WriteLine($"DATA_BULK {id} {dados.Length}");
-
-//        // Envia cada linha de dados
-//        foreach (string dado in dados)
-//        {
-//            writer.WriteLine(dado);
-//        }
-
-//        // Aguarda input antes de encerrar
-//        Console.WriteLine("[WAVY] Pressiona Enter para sair...");
-//        Console.ReadLine();
-
-//        // Envia mensagem de encerramento
-//        writer.WriteLine("QUIT");
-//        client.Close(); // Fecha ligação TCP
-//    }
-//}
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Collections.Generic;
@@ -60,6 +7,7 @@ class Wavy
 {
     static void Main()
     {
+        //TestarEscritaCSV();
         string ipAgregador = "127.0.0.1";
 
         Console.Write("[WAVY] Quantas WAVYs pretende criar? ");
@@ -120,6 +68,13 @@ class Wavy
                     writer.WriteLine(dado);
                 }
 
+                // ================= Guardar em CSV =================
+                Console.WriteLine($"[DEBUG] A guardar os dados no CSV...");
+                GuardarDadosCSV(id, porta, dados);
+                // ===================================================
+
+
+
                 // Aguarda input antes de encerrar
                 Console.WriteLine($"[WAVY:{id}] Pressiona Enter para continuar...");
                 Console.ReadLine();
@@ -142,5 +97,44 @@ class Wavy
 
         Console.WriteLine("\n[WAVY] Todas as WAVYs terminaram. Pressiona Enter para sair...");
         Console.ReadLine();
+    }
+
+
+
+    static void GuardarDadosCSV(string id, int porta, string[] dados)
+    {
+        // Caminho absoluto onde queres guardar o ficheiro
+        string caminhoCSV = @"C:\Users\maria\OneDrive\Documents\GitHub\SD_PL3\SD\dados_wavys.csv";
+
+        bool escreverCabecalho = !File.Exists(caminhoCSV);
+
+        using (StreamWriter sw = new StreamWriter(caminhoCSV, append: true))
+        {
+            if (escreverCabecalho)
+            {
+                // Escreve o cabeçalho só se o ficheiro ainda não existir
+                sw.WriteLine("ID,Porta,Temperatura,Humidade,Pressao,DataHora");
+            }
+
+            string temperatura = ObterValor(dados, "temperatura");
+            string humidade = ObterValor(dados, "humidade");
+            string pressao = ObterValor(dados, "pressao");
+            string dataHora = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            sw.WriteLine($"{dataHora},{id},{porta},{temperatura},{humidade},{pressao}");
+        }
+    }
+
+
+    static string ObterValor(string[] dados, string sensor)
+    {
+        foreach (string linha in dados)
+        {
+            if (linha.StartsWith(sensor + ":")) //sensor recebe a temperatuda, humidade e pressao
+            {
+                return linha.Split(':')[1];
+            }
+        }
+        return "";
     }
 }
