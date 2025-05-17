@@ -37,7 +37,7 @@
               "RelativeDocumentMoniker": "..\\wavy.cs\\Program.cs",
               "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\wavy.cs\\Program.cs",
               "RelativeToolTip": "..\\wavy.cs\\Program.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAAG4AAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAADoAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-07T14:14:31.875Z",
               "EditorCaption": ""
@@ -52,8 +52,7 @@
               "RelativeToolTip": "..\\agregador.cs\\Program.cs",
               "ViewState": "AgIAAHoAAAAAAAAAAAAAAEsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-07T14:06:24.69Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-07T14:06:24.69Z"
             },
             {
               "$type": "Document",
@@ -65,8 +64,7 @@
               "RelativeToolTip": "..\\servidor.cs\\Program.cs",
               "ViewState": "AgIAAE0AAAAAAAAAAAAAAA4AAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-07T14:06:33.139Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-07T14:06:33.139Z"
             }
           ]
         }
