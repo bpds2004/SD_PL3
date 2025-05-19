@@ -6,89 +6,75 @@ using System.Threading;
 
 class Servidor
 {
-    // ===================== FASE 4 =====================
-    // Objeto de bloqueio para escrita em ficheiro
-    static readonly object lockFicheiro = new object();
+    // === NOVO === cabeçalho desejado
+    const string ficheiro = "dados_servidor.csv";
+    static readonly object lockCsv = new object();
 
     static void Main()
     {
-        // Inicia servidor na porta 6000
-        TcpListener listener = new TcpListener(IPAddress.Any, 6000);
-        listener.Start();
+        /*–– cria CSV c/ cabeçalho se não existir ––*/
+        if (!File.Exists(ficheiro))
+            File.WriteAllText(ficheiro,
+                "ID,Porta,Temperatura,Humidade,Pressao,DataHora\n");
+
+        TcpListener lst = new TcpListener(IPAddress.Any, 6000);
+        lst.Start();
         Console.WriteLine("[SERVIDOR] A ouvir na porta 6000...");
 
         while (true)
-        {
-            TcpClient client = listener.AcceptTcpClient();
-
-            // ===================== FASE 4 =====================
-            // Nova thread para tratar cada cliente
-            Thread t = new Thread(() => TratarCliente(client));
-            t.Start();
-        }
+            new Thread(() => Tratar(lst.AcceptTcpClient())).Start();
     }
 
-    static void TratarCliente(TcpClient client)
+    /*–– thread p/ cada ligação ––*/
+    static void Tratar(TcpClient cli)
     {
-        Console.WriteLine("[SERVIDOR] Ligado ao AGREGADOR.");
-        StreamReader reader = new StreamReader(client.GetStream());
-        StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
+        var r = new StreamReader(cli.GetStream());
+        var w = new StreamWriter(cli.GetStream()) { AutoFlush = true };
 
-        // Lê mensagem recebida
-        string msg = reader.ReadLine();
-        Console.WriteLine($"[SERVIDOR] Recebido: {msg}");
+        string linha = r.ReadLine();
+        Console.WriteLine($"[SERVIDOR] Recebido: {linha}");
 
-        if (msg.StartsWith("REGISTER"))
+        if (linha.StartsWith("REGISTER"))
         {
-            // ===================== FASE 2 =====================
-            // Responde ao pedido de registo
-            writer.WriteLine("200 REGISTERED");
+            w.WriteLine("200 REGISTERED");
         }
-        else if (msg.StartsWith("DISCONNECT"))
+        else if (linha.StartsWith("DISCONNECT"))
         {
-            // ===================== FASE 4 =====================
-            // Responde ao pedido de desconexão
-            writer.WriteLine("400 BYE");
+            w.WriteLine("400 BYE");
         }
-        // ===================== FASE 3 =====================
-        else if (msg.StartsWith("FORWARD_BULK"))
+        else if (linha.StartsWith("FORWARD_BULK"))
         {
-            string[] parts = msg.Split(' ');
-            string id = parts[1];
-            int n_dados = int.Parse(parts[2]);
+            //  FORWARD_BULK  id  porta  n
+            string[] p = linha.Split(' ');
+            string id = p[1];
+            string porta = p[2];
+            int n = int.Parse(p[3]);
 
-            // Lê os dados recebidos
-            string[] dados = new string[n_dados];
-            for (int i = 0; i < n_dados; i++)
+            string[] leituras = new string[n];
+            for (int i = 0; i < n; i++) leituras[i] = r.ReadLine();
+
+            string temp = Valor("temperatura", leituras);
+            string hum = Valor("humidade", leituras);
+            string pres = Valor("pressao", leituras);
+
+            lock (lockCsv)
             {
-                dados[i] = reader.ReadLine();
+                string csv = $"{id},{porta},{temp},{hum},{pres}," +
+                             $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}\n";
+                File.AppendAllText(ficheiro, csv);
             }
-
-            // Mostra os dados no terminal
-            Console.WriteLine($"[SERVIDOR] Dados recebidos da WAVY {id}:");
-            foreach (string d in dados)
-            {
-                Console.WriteLine("  " + d);
-            }
-
-            // ===================== FASE 4 =====================
-            // Protege acesso concorrente ao ficheiro
-            lock (lockFicheiro)
-            {
-                string ficheiroTxt = $"dados_{id}.txt";
-                using (StreamWriter sw = new StreamWriter(ficheiroTxt, append: true))
-                {
-                    foreach (string linha in dados)
-                    {
-                        sw.WriteLine(linha);
-                    }
-                }
-            }
-
-            // Responde ao Agregador
-            writer.WriteLine("301 BULK_STORED");
+            w.WriteLine("301 BULK_STORED");
         }
 
-        client.Close(); // Fecha ligação
+
+        cli.Close();
+    }
+
+    /*–– utilitário local ––*/
+    static string Valor(string chave, string[] arr)
+    {
+        foreach (var l in arr)
+            if (l.StartsWith(chave)) return l.Split(':')[1];
+        return "";
     }
 }
