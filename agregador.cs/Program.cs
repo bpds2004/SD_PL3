@@ -1,105 +1,107 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
+﻿/*
+ * AGREGADOR
+ * ---------
+ * – Aceita criar vários listeners em portas diferentes.
+ * – Cada ligação de WAVY é tratada em thread própria:
+ *       HELLO  -> regista no Servidor
+ *       DATA_BULK -> envia FORWARD_BULK ao Servidor, devolve 301
+ *       QUIT  -> notifica DISCONNECT, devolve QUIT_OK
+ */
+
+using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 
 class Agregador
 {
-    /*–– permite vários listeners a correr em paralelo ––*/
-    static readonly ConcurrentDictionary<int, TcpListener> listeners = new();
+    static readonly ConcurrentDictionary<int, TcpListener> listeners = new();   // porta → listener
 
     static void Main()
     {
-        bool sair = false;
-
-        while (!sair)
+        while (true)
         {
             Console.Write("[AGREGADOR] Quantos Agregadores pretende criar? (clique 'q' para sair) ");
-            string inp = Console.ReadLine();
-            if (inp.Trim().Equals("q", StringComparison.OrdinalIgnoreCase))
+            string inp = Console.ReadLine()?.Trim();
+            if (inp.Equals("q", StringComparison.OrdinalIgnoreCase)) break;
+
+            int n = string.IsNullOrEmpty(inp) ? 0 : int.Parse(inp);
+
+            /* -------- cria os listeners pedidos -------- */
+            for (int i = 0; i < n; i++)
             {
-                sair = true;
-                break;
-            }
+                Console.Write($"[AGREGADOR]   Porta para o Agregador #{i + 1}: ");
+                int port = int.Parse(Console.ReadLine()!);
 
-            int numAgregadores = string.IsNullOrWhiteSpace(inp) ? 0 : int.Parse(inp);
-
-            /*–– criar os listeners pedidos ––*/
-            for (int i = 0; i < numAgregadores; i++)
-            {
-                Console.Write("[AGREGADOR]   Porta para o Agregador #{i + 1}: ");
-
-                int porta = int.Parse(Console.ReadLine());
-
-                if (listeners.ContainsKey(porta))
+                if (listeners.ContainsKey(port))
                 {
                     Console.WriteLine("[AGREGADOR] Já existe listener nessa porta.");
                     continue;
                 }
 
-                var lst = new TcpListener(IPAddress.Any, porta);
-                if (listeners.TryAdd(porta, lst))
-                {
-                    lst.Start();
-                    new Thread(() => Escutar(lst, porta)).Start();
-                    Console.WriteLine($"[AGREGADOR:{porta}] ativo.");
-                }
+                var lst = new TcpListener(IPAddress.Any, port);
+                lst.Start();
+                listeners[port] = lst;
+                new Thread(() => Escutar(lst, port)).Start();
+                Console.WriteLine($"[AGREGADOR:{port}] À espera de WAVYs na porta {port}...");
             }
 
-            Thread.Sleep(40_000);   // 40 seg (meramente para não saturar CPU)
+            Thread.Sleep(40_000);                        // pausa meramente para ritmo
         }
 
-        /*–– shutdown global ––*/
+        /* -------- shutdown global -------- */
         foreach (var kv in listeners) kv.Value.Stop();
     }
 
-    /*–––– escuta contínua para cada porta ––––*/
-    static void Escutar(TcpListener lst, int porta)
+    /* ========================================================= */
+
+    static void Escutar(TcpListener lst, int port)
     {
-        while (true)
+        try
         {
-            TcpClient cli;
-            try { cli = lst.AcceptTcpClient(); }
-            catch { break; }   // listener foi fechado
-            new Thread(() => TratarWavy(cli, porta)).Start();
+            while (true)
+            {
+                var cli = lst.AcceptTcpClient();          // bloqueia até haver ligação
+                new Thread(() => TratarWavy(cli, port)).Start();
+            }
         }
+        catch (SocketException) { /* listener fechado; sai */ }
     }
 
-    /*–––– trata cada ligação de WAVY ––––*/
-    static void TratarWavy(TcpClient wavy, int porta)
+    static void TratarWavy(TcpClient wavy, int port)
     {
+        Console.WriteLine($"[AGREGADOR:{port}] WAVY conectada.");
         var r = new StreamReader(wavy.GetStream());
         var w = new StreamWriter(wavy.GetStream()) { AutoFlush = true };
         string id = "";
 
         try
         {
-            /*–– FASE 2 : HELLO ––*/
+            /* -------- FASE 2 : HELLO -------- */
             string hello = r.ReadLine();
-            Console.WriteLine($"[AGREGADOR:{porta}] Recebido da WAVY: {hello}");
+            Console.WriteLine($"[AGREGADOR:{port}] Recebido da WAVY: {hello}");
 
             if (hello.StartsWith("HELLO"))
             {
                 id = hello.Split(' ')[1];
                 w.WriteLine("100 OK");
 
-                Console.WriteLine($"[AGREGADOR:{porta}] A registar ID '{id}' no SERVIDOR…");
-                Console.WriteLine($"[AGREGADOR:{porta}] Resposta do SERVIDOR: {EnviarServidor($"REGISTER {id}")}");
+                Console.WriteLine($"[AGREGADOR:{port}] A registar ID '{id}' no SERVIDOR...");
+                Console.WriteLine($"[AGREGADOR:{port}] Resposta do SERVIDOR: {EnviarServidor($"REGISTER {id}")}");
             }
 
-            /*–– ciclo de trabalho ––*/
+            /* -------- ciclo principal -------- */
             while (true)
             {
-                string header = r.ReadLine();          // DATA_BULK ou QUIT
+                string header = r.ReadLine();             // DATA_BULK … ou QUIT
                 if (header == null) break;
 
-                /*–– FASE 3 : Dados ––*/
+                /* ------- FASE 3 : DATA_BULK ------- */
                 if (header.StartsWith("DATA_BULK"))
                 {
-                    Console.WriteLine($"[AGREGADOR:{porta}] Cabeçalho recebido: {header}");
-
+                    Console.WriteLine($"[AGREGADOR:{port}] Cabeçalho recebido: {header}");
                     string[] h = header.Split(' ');
                     string wavyId = h[1];
                     int n = int.Parse(h[2]);
@@ -108,31 +110,31 @@ class Agregador
                     for (int i = 0; i < n; i++)
                     {
                         dados[i] = r.ReadLine();
-                        Console.WriteLine($"[AGREGADOR:{porta}] Dado recebido: {dados[i]}");
+                        Console.WriteLine($"[AGREGADOR:{port}] Dado recebido: {dados[i]}");
                     }
 
-                    Console.WriteLine($"[AGREGADOR:{porta}] A reenviar dados ao SERVIDOR…");
-                    string resp = EnviarServidorBulk(wavyId, porta, dados);
-                    Console.WriteLine($"[AGREGADOR:{porta}] SERVIDOR respondeu: {resp}");
-                    w.WriteLine(resp);                 // 301 BULK_STORED
-                    continue;                          // volta a aguardar próximo header
+                    Console.WriteLine($"[AGREGADOR:{port}] A reenviar dados ao SERVIDOR.");
+                    string resp = EnviarServidorBulk(wavyId, port, dados);
+                    Console.WriteLine($"[AGREGADOR:{port}] SERVIDOR respondeu: {resp}");
+                    w.WriteLine(resp);                    // devolve 301 BULK_STORED
+                    continue;
                 }
 
-                /*–– FASE 4 : QUIT ––*/
+                /* ------- FASE 4 : QUIT ------- */
                 if (header == "QUIT")
                 {
-                    Console.WriteLine($"[AGREGADOR:{porta}] WAVY diz: QUIT");
-                    Console.WriteLine($"[AGREGADOR:{porta}] A informar desconexão do ID {id} ao SERVIDOR…");
-                    Console.WriteLine($"[AGREGADOR:{porta}] SERVIDOR respondeu: {EnviarServidor($"DISCONNECT {id}")}");
+                    Console.WriteLine($"[AGREGADOR:{port}] WAVY diz: QUIT");
+                    Console.WriteLine($"[AGREGADOR:{port}] A informar desconexão do ID {id} ao SERVIDOR...");
+                    Console.WriteLine($"[AGREGADOR:{port}] SERVIDOR respondeu: {EnviarServidor($"DISCONNECT {id}")}");
                     w.WriteLine("QUIT_OK");
-                    Console.WriteLine($"[AGREGADOR:{porta}] {id} desconectado.");
+                    Console.WriteLine($"[AGREGADOR:{port}] {id} desconectado.");
                     break;
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[AGREGADOR:{porta}] Erro: {ex.Message}");
+            Console.WriteLine($"[AGREGADOR:{port}] Erro: {ex.Message}");
         }
         finally
         {
@@ -140,26 +142,28 @@ class Agregador
         }
     }
 
-    /*–– request simples ––*/
+    /* ========================================================= */
+
+    /* –– pedido simples (REGISTER / DISCONNECT) –– */
     static string EnviarServidor(string msg)
     {
         using var srv = new TcpClient("127.0.0.1", 6000);
-        var rr = new StreamReader(srv.GetStream());
-        var ww = new StreamWriter(srv.GetStream()) { AutoFlush = true };
-        ww.WriteLine(msg);
-        return rr.ReadLine();
+        var r = new StreamReader(srv.GetStream());
+        var w = new StreamWriter(srv.GetStream()) { AutoFlush = true };
+        w.WriteLine(msg);
+        return r.ReadLine();            // 200 REGISTERED ou 400 BYE
     }
 
-    /*–– === FASE 3 : Bulk ––*/
-    static string EnviarServidorBulk(string id, int porta, string[] dados)
+    /* –– pedido de bulk –– */
+    static string EnviarServidorBulk(string id, int port, string[] dados)
     {
-        using var s = new TcpClient("127.0.0.1", 6000);
-        var rr = new StreamReader(s.GetStream());
-        var ww = new StreamWriter(s.GetStream()) { AutoFlush = true };
+        using var srv = new TcpClient("127.0.0.1", 6000);
+        var r = new StreamReader(srv.GetStream());
+        var w = new StreamWriter(srv.GetStream()) { AutoFlush = true };
 
-        ww.WriteLine($"FORWARD_BULK {id} {porta} {dados.Length}");
-        foreach (var d in dados) ww.WriteLine(d);
+        w.WriteLine($"FORWARD_BULK {id} {port} {dados.Length}");
+        foreach (string d in dados) w.WriteLine(d);
 
-        return rr.ReadLine();   // 301 BULK_STORED
+        return r.ReadLine();            // 301 BULK_STORED
     }
 }

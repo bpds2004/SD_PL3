@@ -1,4 +1,14 @@
-﻿using System;
+﻿/*
+ * SERVIDOR
+ * --------
+ * – Ouve na porta 6000.
+ * – REGISTER  → devolve 200 REGISTERED
+ * – DISCONNECT → devolve 400 BYE
+ * – FORWARD_BULK id porta n + n linhas  → grava/append no CSV e devolve 301 BULK_STORED
+ * – Protege escrita concorrente ao ficheiro com lock.
+ */
+
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -6,26 +16,25 @@ using System.Threading;
 
 class Servidor
 {
-    // === NOVO === cabeçalho desejado
-    const string ficheiro = "dados_servidor.csv";
-    static readonly object lockCsv = new object();
+    const string CSV = "dados_servidor.csv";
+    static readonly object lockCsv = new();
 
     static void Main()
     {
-        /*–– cria CSV c/ cabeçalho se não existir ––*/
-        if (!File.Exists(ficheiro))
-            File.WriteAllText(ficheiro,
-                "ID,Porta,Temperatura,Humidade,Pressao,DataHora\n");
+        /* Se não existir, cria o CSV com cabeçalho */
+        if (!File.Exists(CSV))
+            File.WriteAllText(CSV, "ID,Porta,Temperatura,Humidade,Pressao,DataHora\n");
 
-        TcpListener lst = new TcpListener(IPAddress.Any, 6000);
-        lst.Start();
+        var listener = new TcpListener(IPAddress.Any, 6000);
+        listener.Start();
         Console.WriteLine("[SERVIDOR] A ouvir na porta 6000...");
 
         while (true)
-            new Thread(() => Tratar(lst.AcceptTcpClient())).Start();
+            new Thread(() => Tratar(listener.AcceptTcpClient())).Start();
     }
 
-    /*–– thread p/ cada ligação ––*/
+    /* ========================================================= */
+
     static void Tratar(TcpClient cli)
     {
         var r = new StreamReader(cli.GetStream());
@@ -44,7 +53,7 @@ class Servidor
         }
         else if (linha.StartsWith("FORWARD_BULK"))
         {
-            //  FORWARD_BULK  id  porta  n
+            /*   FORWARD_BULK id porta n   */
             string[] p = linha.Split(' ');
             string id = p[1];
             string porta = p[2];
@@ -53,28 +62,28 @@ class Servidor
             string[] leituras = new string[n];
             for (int i = 0; i < n; i++) leituras[i] = r.ReadLine();
 
+            /* Extrai valores */
             string temp = Valor("temperatura", leituras);
             string hum = Valor("humidade", leituras);
             string pres = Valor("pressao", leituras);
 
+            /* Escreve CSV de forma thread‑safe */
             lock (lockCsv)
             {
-                string csv = $"{id},{porta},{temp},{hum},{pres}," +
-                             $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}\n";
-                File.AppendAllText(ficheiro, csv);
+                File.AppendAllText(CSV,
+                    $"{id},{porta},{temp},{hum},{pres},{DateTime.Now:yyyy-MM-dd HH:mm:ss}\n");
             }
             w.WriteLine("301 BULK_STORED");
         }
 
-
         cli.Close();
     }
 
-    /*–– utilitário local ––*/
     static string Valor(string chave, string[] arr)
     {
-        foreach (var l in arr)
-            if (l.StartsWith(chave)) return l.Split(':')[1];
+        foreach (string l in arr)
+            if (l.StartsWith(chave + ":"))
+                return l.Split(':')[1];
         return "";
     }
 }
