@@ -2,12 +2,12 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using System.Threading;
 
 class Wavy
 {
     static void Main()
     {
-        //TestarEscritaCSV();
         string ipAgregador = "127.0.0.1";
 
         Console.Write("[WAVY] Quantas WAVYs pretende criar? ");
@@ -52,32 +52,30 @@ class Wavy
                 Console.WriteLine($"[WAVY:{id}] Resposta do AGREGADOR: " + response);
 
                 // ===================== FASE 3 =====================
-                Console.WriteLine($"[WAVY:{id}] Enviando dados de sensores...");
-                string[] dados = new string[]
-                {
-                    "temperatura:22.5",
-                    "humidade:45",
-                    "pressao:1012"
-                };
+                Console.WriteLine($"[WAVY:{id}] Iniciando envio de dados de sensores a cada minuto...");
 
-                writer.WriteLine($"DATA_BULK {id} {dados.Length}");
-
-                foreach (string dado in dados)
+                for (int envio = 1; envio <= 10; envio++) // Envia 10 vezes. Pode ser substituído por: while (true)
                 {
-                    Console.WriteLine($"[WAVY:{id}] Enviando: " + dado);
-                    writer.WriteLine(dado);
+                    Console.WriteLine($"[WAVY:{id}] Envio #{envio}");
+
+                    string[] dados = new string[]
+                    {
+                        "temperatura:22.5",
+                        "humidade:45",
+                        "pressao:1012"
+                    };
+
+                    writer.WriteLine($"DATA_BULK {id} {dados.Length}");
+
+                    foreach (string dado in dados)
+                    {
+                        Console.WriteLine($"[WAVY:{id}] Enviando: " + dado);
+                        writer.WriteLine(dado);
+                    }
+
+                    Console.WriteLine($"[WAVY:{id}] A aguardar 1 minuto antes do próximo envio...\n");
+                    Thread.Sleep(60000); // Espera 1 minuto (60000 ms)
                 }
-
-                // ================= Guardar em CSV =================
-                Console.WriteLine($"[DEBUG] A guardar os dados no CSV...");
-                GuardarDadosCSV(id, porta, dados);
-                // ===================================================
-
-
-
-                // Aguarda input antes de encerrar
-                Console.WriteLine($"[WAVY:{id}] Pressiona Enter para continuar...");
-                Console.ReadLine();
 
                 // ===================== FASE 4 =====================
                 Console.WriteLine($"[WAVY:{id}] Enviando mensagem de desconexão...");
@@ -99,38 +97,11 @@ class Wavy
         Console.ReadLine();
     }
 
-
-
-    static void GuardarDadosCSV(string id, int porta, string[] dados)
-    {
-        // Caminho absoluto onde queres guardar o ficheiro
-        string caminhoCSV = @"C:\Users\maria\OneDrive\Documents\GitHub\SD_PL3\SD\dados_wavys.csv";
-
-        bool escreverCabecalho = !File.Exists(caminhoCSV);
-
-        using (StreamWriter sw = new StreamWriter(caminhoCSV, append: true))
-        {
-            if (escreverCabecalho)
-            {
-                // Escreve o cabeçalho só se o ficheiro ainda não existir
-                sw.WriteLine("ID,Porta,Temperatura,Humidade,Pressao,DataHora");
-            }
-
-            string temperatura = ObterValor(dados, "temperatura");
-            string humidade = ObterValor(dados, "humidade");
-            string pressao = ObterValor(dados, "pressao");
-            string dataHora = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-            sw.WriteLine($"{id},{porta},{temperatura},{humidade},{pressao},{dataHora}");
-        }
-    }
-
-
     static string ObterValor(string[] dados, string sensor)
     {
         foreach (string linha in dados)
         {
-            if (linha.StartsWith(sensor + ":")) //sensor recebe a temperatuda, humidade e pressao
+            if (linha.StartsWith(sensor + ":"))
             {
                 return linha.Split(':')[1];
             }
@@ -138,3 +109,4 @@ class Wavy
         return "";
     }
 }
+
