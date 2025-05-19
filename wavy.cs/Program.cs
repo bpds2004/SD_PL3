@@ -1,118 +1,111 @@
-﻿/*
- * WAVY
- * ----
- * – Corre tantas WAVYs quantas o utilizador quiser, criando‑as em ciclos de 40 s.
- * – Mantém cada ligação aberta: envia HELLO uma vez, DATA_BULK de 40 em 40 s,
- *   e só envia QUIT quando o utilizador finalmente escreve ‘q’.
- * – Guarda localmente (apenas para DEBUG) o CSV recebido do Servidor.
- */
-
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Collections.Generic;
 using System.Threading;
 
 class Wavy
 {
-    /* -------- configuração -------- */
-    const string IP_AGREGADOR = "127.0.0.1";
-    const int INTERVALO_MS = 40_000;          // 40 s
-
     static void Main()
     {
-        /* Colecção das WAVYs vivas.
-           Cada tuplo guarda: id ‑ porta ‑ tcp ‑ reader ‑ writer */
-        var wavys = new List<(string id, int port,
-                              TcpClient cli, StreamReader rd, StreamWriter wr)>();
+        string ipAgregador = "127.0.0.1";
 
-        while (true)
+        Console.Write("[WAVY] Quantas WAVYs pretende criar? ");
+        int numWavys = int.Parse(Console.ReadLine());
+
+        // Listas para guardar os dados de configuração
+        List<string> ids = new List<string>();
+        List<int> portas = new List<int>();
+
+        // Fase de recolha de dados
+        for (int i = 1; i <= numWavys; i++)
         {
-            Console.Write("[WAVY] Quantas WAVYs pretende criar? (clique 'q' para sair) ");
-            string inp = Console.ReadLine()?.Trim();
+            Console.WriteLine($"\n[WAVY] --- Configuração da WAVY #{i} ---");
 
-            if (inp.Equals("q", StringComparison.OrdinalIgnoreCase))
-                break;                                  // sai do ciclo
+            Console.Write("[WAVY] Introduz o ID da WAVY: ");
+            string id = Console.ReadLine();
+            ids.Add(id);
 
-            /* Se o utilizador carregar só <Enter>, não cria nenhuma – continua para enviar */
-            int nNovas = string.IsNullOrEmpty(inp) ? 0 : int.Parse(inp);
+            Console.Write("[WAVY] Introduz a PORTA do Agregador: ");
+            int porta = int.Parse(Console.ReadLine());
+            portas.Add(porta);
+        }
 
-            /* ------------------- criação de novas WAVYs ------------------- */
-            for (int i = 0; i < nNovas; i++)
+        // Fase de execução para cada WAVY
+        for (int i = 0; i < numWavys; i++)
+        {
+            string id = ids[i];
+            int porta = portas[i];
+
+            Console.WriteLine();
+
+            try
             {
-                Console.WriteLine($"\n[WAVY] --- Configuração da WAVY #{i + 1} ---");
-                Console.Write("[WAVY] Introduz o ID da WAVY: ");
-                string id = Console.ReadLine()!.Trim();
-                Console.Write("[WAVY] Introduz a PORTA do Agregador: ");
-                int port = int.Parse(Console.ReadLine()!);
+                // ===================== FASE 2 =====================
+                TcpClient client = new TcpClient(ipAgregador, porta);
+                StreamReader reader = new StreamReader(client.GetStream());
+                StreamWriter writer = new StreamWriter(client.GetStream()) { AutoFlush = true };
 
-                try
+                Console.WriteLine($"[WAVY:{id}] Ligado ao Agregador. Enviando HELLO...");
+                writer.WriteLine("HELLO " + id);
+                string response = reader.ReadLine();
+                Console.WriteLine($"[WAVY:{id}] Resposta do AGREGADOR: " + response);
+
+                // ===================== FASE 3 =====================
+                Console.WriteLine($"[WAVY:{id}] Iniciando envio de dados de sensores a cada minuto...");
+
+                for (int envio = 1; envio <= 10; envio++) // Envia 10 vezes. Pode ser substituído por: while (true)
                 {
-                    var cli = new TcpClient(IP_AGREGADOR, port);
-                    var rd = new StreamReader(cli.GetStream());
-                    var wr = new StreamWriter(cli.GetStream()) { AutoFlush = true };
+                    Console.WriteLine($"[WAVY:{id}] Envio #{envio}");
 
-                    /* -------- FASE 2 : HELLO -------- */
-                    Console.WriteLine($"[WAVY:{id}] Ligado ao Agregador. Enviando HELLO...");
-                    wr.WriteLine($"HELLO {id}");
-                    Console.WriteLine($"[WAVY:{id}] Resposta do AGREGADOR: {rd.ReadLine()}");
-
-                    wavys.Add((id, port, cli, rd, wr));     // regista a WAVY viva
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[WAVY] Erro a ligar: {ex.Message}");
-                }
-            }
-
-            /* ------------------- envio periódico para TODAS ------------------- */
-            foreach (var w in wavys.ToArray())             // snapshot p/ não alterar enumeração
-            {
-                try
-                {
-                    /* -------- FASE 3 : DATA_BULK -------- */
-                    string[] dados =
+                    string[] dados = new string[]
                     {
                         "temperatura:22.5",
                         "humidade:45",
                         "pressao:1012"
                     };
 
-                    Console.WriteLine($"\n[WAVY:{w.id}] Enviando dados de sensores...");
-                    w.wr.WriteLine($"DATA_BULK {w.id} {dados.Length}");
-                    foreach (string l in dados)
+                    writer.WriteLine($"DATA_BULK {id} {dados.Length}");
+
+                    foreach (string dado in dados)
                     {
-                        Console.WriteLine($"[WAVY:{w.id}] Enviando: {l}");
-                        w.wr.WriteLine(l);
+                        Console.WriteLine($"[WAVY:{id}] Enviando: " + dado);
+                        writer.WriteLine(dado);
                     }
 
-                    /* ---- confirma única resposta ---- */
-                    Console.WriteLine($"[WAVY:{w.id}] {w.rd.ReadLine()}");   // 301 BULK_STORED
+                    Console.WriteLine($"[WAVY:{id}] A aguardar 1 minuto antes do próximo envio...\n");
+                    Thread.Sleep(60000); // Espera 1 minuto (60000 ms)
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[WAVY:{w.id}] erro: {ex.Message}");
-                    wavys.Remove(w);                       // elimina defunta
-                }
+
+                // ===================== FASE 4 =====================
+                Console.WriteLine($"[WAVY:{id}] Enviando mensagem de desconexão...");
+                writer.WriteLine("QUIT");
+
+                string quitResponse = reader.ReadLine();
+                Console.WriteLine($"[WAVY:{id}] Resposta do AGREGADOR: " + quitResponse);
+
+                client.Close();
+                Console.WriteLine($"[WAVY:{id}] Conexão encerrada.\n");
             }
-
-            Thread.Sleep(INTERVALO_MS);                    // espera 40 s e volta a perguntar
-        }
-
-        /* ------------------- FASE 4 : QUIT ordenado ------------------- */
-        foreach (var w in wavys)
-        {
-            try
+            catch (Exception ex)
             {
-                Console.WriteLine($"\n[WAVY:{w.id}] Enviando mensagem de desconexão...");
-                w.wr.WriteLine("QUIT");
-                Console.WriteLine($"[WAVY:{w.id}] Resposta do AGREGADOR: {w.rd.ReadLine()}");
-                w.cli.Close();
+                Console.WriteLine($"[WAVY:{id}] Erro: {ex.Message}");
             }
-            catch { /* ignora falhas na limpeza */ }
         }
 
-        Console.WriteLine("[INFO] Premir Enter para fechar…");
+        Console.WriteLine("\n[WAVY] Todas as WAVYs terminaram. Pressiona Enter para sair...");
         Console.ReadLine();
+    }
+
+    static string ObterValor(string[] dados, string sensor)
+    {
+        foreach (string linha in dados)
+        {
+            if (linha.StartsWith(sensor + ":"))
+            {
+                return linha.Split(':')[1];
+            }
+        }
+        return "";
     }
 }
