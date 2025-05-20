@@ -1,46 +1,42 @@
-﻿using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Text;
-using System.Threading.Tasks;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+
 
 class WavyPublisher
 {
     static void Main()
     {
-        // Configuração da conexão
-        var factory = new ConnectionFactory() { HostName = "localhost" };
+        var factory = new ConnectionFactory() { HostName = "localhost", Port = 5672 };
 
-        using var connection = factory.CreateConnection();
-        using var channel = connection.CreateModel();
-
-        // Declara o exchange do tipo 'topic' para Pub/Sub
-        string exchangeName = "sensor_data";
-        channel.ExchangeDeclare(exchange: exchangeName, type: "topic");
-
-        // Dados de sensores para simular publicação
-        var dados = new[]
+        using (var connection = factory.CreateConnection())
+        using (var channel = connection.CreateModel())
         {
-            ("sensor.temperatura", "22.5"),
-            ("sensor.humidade", "45"),
-            ("sensor.pressao", "1012")
-        };
+            string exchangeName = "sensor_data";
+            channel.ExchangeDeclare(exchange: exchangeName, type: "topic");
 
-        foreach (var (routingKey, mensagem) in dados)
-        {
-            var body = Encoding.UTF8.GetBytes(mensagem);
+            var dados = new[]
+            {
+                ("sensor.temperatura", "22.5"),
+                ("sensor.humidade", "45"),
+                ("sensor.pressao", "1012")
+            };
 
-            channel.BasicPublish(exchange: exchangeName,
-                                 routingKey: routingKey,
-                                 basicProperties: null,
-                                 body: body);
+            foreach (var (routingKey, mensagem) in dados)
+            {
+                var body = Encoding.UTF8.GetBytes(mensagem);
+                channel.BasicPublish(exchange: exchangeName,
+                                     routingKey: routingKey,
+                                     basicProperties: null,
+                                     body: body);
 
-            Console.WriteLine($"[WAVY] Publicou '{mensagem}' em tópico '{routingKey}'");
+                Console.WriteLine($"[WAVY] Publicou '{mensagem}' em tópico '{routingKey}'");
+            }
+
+            Console.WriteLine("Publicação concluída. Pressione Enter para sair.");
+            Console.ReadLine();
         }
-
-        Console.WriteLine("Publicação concluída. Pressione Enter para sair.");
-        Console.ReadLine();
     }
 }
+
