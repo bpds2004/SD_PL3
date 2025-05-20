@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="ClosedXML" Version="0.101.0" />
+		<PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
 	</ItemGroup>
 
 </Project>
