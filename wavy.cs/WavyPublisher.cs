@@ -10,7 +10,7 @@ class WavyPublisher
     {
         var factory = new ConnectionFactory() { HostName = "localhost", Port = 5672 };
 
-        using (var connection = factory.CreateConnection())
+        using var connection = factory.CreateConnection();
         using (var channel = connection.CreateModel())
         {
             string exchangeName = "sensor_data";
