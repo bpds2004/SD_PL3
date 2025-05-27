@@ -1,7 +1,7 @@
-﻿using System.Net.Sockets;
-using System.Net;
-using System;
+﻿using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using Grpc.Net.Client;
 using Analyze;
@@ -25,7 +25,7 @@ class Servidor
             }
         }
 
-        // Thread para pedidos de análise
+        // Thread separada para menu de análise RPC
         new Thread(() => MenuAnalise()).Start();
 
         while (true)
@@ -114,7 +114,7 @@ class Servidor
 
             try
             {
-                using var channel = GrpcChannel.ForAddress("http://localhost:5000");
+                using var channel = GrpcChannel.ForAddress("http://localhost:5002");
                 var client = new AnalysisService.AnalysisServiceClient(channel);
 
                 var resposta = client.Analyze(new AnalyzeRequest { Sensor = sensor });

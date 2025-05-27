@@ -1,15 +1,10 @@
-using AnalysisService.Services;
+using AnalysisService.Services;  // para AnalysisServiceImpl
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 builder.Services.AddGrpc();
 
 var app = builder.Build();
+app.MapGrpcService<AnalysisServiceImpl>();  // aqui regista o teu impl
 
-// Configure the HTTP request pipeline.
-app.MapGrpcService<GreeterService>();
-app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-app.MapGrpcService<AnalysisServiceImpl>();
-
-app.Run();
+app.MapGet("/", () => "gRPC AnalysisService a correr em http://localhost:5002");
+app.Run("http://localhost:5002");
