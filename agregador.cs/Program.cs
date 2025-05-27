@@ -2,7 +2,10 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 class Agregador
 {
@@ -13,14 +16,12 @@ class Agregador
 
         int[] portas = new int[numAgregadores];
 
-        // Primeiro, recolhe todas as portas
         for (int i = 0; i < numAgregadores; i++)
         {
             Console.Write($"[AGREGADOR] Porta para o Agregador #{i + 1}: ");
             portas[i] = int.Parse(Console.ReadLine());
         }
 
-        // Depois, inicia cada Agregador
         foreach (int porta in portas)
         {
             new Thread(() => IniciarAgregador(porta)).Start();
@@ -36,11 +37,46 @@ class Agregador
         listener.Start();
         Console.WriteLine($"[AGREGADOR:{porta}] À espera de WAVYs na porta {porta}...");
 
+        // ───── Iniciar subscrição RabbitMQ ─────
+        new Thread(() => SubscreverRabbitMQ()).Start();
+
         while (true)
         {
             TcpClient wavy = listener.AcceptTcpClient();
             new Thread(() => TratarWavy(wavy, porta)).Start();
         }
+    }
+
+    static void SubscreverRabbitMQ()
+    {
+        var factory = new ConnectionFactory() { HostName = "localhost" };
+        using var connection = factory.CreateConnection();
+        using var channel = connection.CreateModel();
+
+        channel.ExchangeDeclare(exchange: "sensores", type: "topic");
+        var queueName = channel.QueueDeclare().QueueName;
+
+        Console.Write("[AGREGADOR] Tópicos a subscrever (ex: temperatura,pressao): ");
+        string[] topicos = Console.ReadLine().Split(',');
+
+        foreach (var topico in topicos)
+        {
+            channel.QueueBind(queue: queueName, exchange: "sensores", routingKey: topico);
+        }
+
+        var consumer = new EventingBasicConsumer(channel);
+        consumer.Received += (model, ea) =>
+        {
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            Console.WriteLine($"[AGREGADOR:RabbitMQ] Mensagem recebida: {message}");
+            // Aqui pode integrar com RPC para pré-processamento
+        };
+
+        channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+
+        Console.WriteLine("[AGREGADOR:RabbitMQ] Subscrição ativa.");
+        while (true) Thread.Sleep(1000);
     }
 
     static void TratarWavy(TcpClient wavy, int porta)
@@ -53,7 +89,6 @@ class Agregador
 
         try
         {
-            // === FASE 2: HELLO ===
             string hello = wavyReader.ReadLine();
             Console.WriteLine($"[AGREGADOR:{porta}] Recebido da WAVY: {hello}");
 
@@ -70,11 +105,9 @@ class Agregador
                 srvWriter.WriteLine("REGISTER " + id);
                 string regResp = srvReader.ReadLine();
                 Console.WriteLine($"[AGREGADOR:{porta}] Resposta do SERVIDOR: {regResp}");
-
                 servidor.Close();
             }
 
-            // === FASE 3: Dados ===
             string dataBulkHeader = wavyReader.ReadLine();
             Console.WriteLine($"[AGREGADOR:{porta}] Cabeçalho recebido: {dataBulkHeader}");
             if (dataBulkHeader.StartsWith("DATA_BULK"))
@@ -103,11 +136,9 @@ class Agregador
 
                 string bulkResp = srvReader.ReadLine();
                 Console.WriteLine($"[AGREGADOR:{porta}] SERVIDOR respondeu: {bulkResp}");
-
                 servidor.Close();
             }
 
-            // === FASE 4: QUIT ===
             string quit = wavyReader.ReadLine();
             Console.WriteLine($"[AGREGADOR:{porta}] WAVY diz: {quit}");
 
@@ -121,7 +152,6 @@ class Agregador
                 srvWriter.WriteLine("DISCONNECT " + id);
                 string byeResp = srvReader.ReadLine();
                 Console.WriteLine($"[AGREGADOR:{porta}] SERVIDOR respondeu: {byeResp}");
-
                 servidor.Close();
             }
 
