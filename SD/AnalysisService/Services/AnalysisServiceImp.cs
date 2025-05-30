@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AnalysisService.Services
 {
-    public class AnalysisServiceImpl : Analyze.AnalysisService.AnalysisServiceBase
+    public class AnalysisServiceImpl : Analyze.AnalysisService
     {
         public override Task<AnalysisResult> Analyze(AnalyzeRequest request, ServerCallContext context)
         {

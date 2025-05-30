@@ -7,16 +7,7 @@
       "RelativeMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|solutionrelative:analysisservice\\services\\analysisserviceimp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\sd\\analysisservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|solutionrelative:analysisservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\sd\\analysisservice\\protos\\analyze.proto||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|solutionrelative:analysisservice\\protos\\analyze.proto||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\sd\\analysisservice\\analysisservice.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|solutionrelative:analysisservice\\analysisservice.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{B7765585-4E33-4D12-8DA9-FF596B4E07BE}|..\\servidor.cs\\Servidor.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\servidor.cs\\analyze.proto||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B7765585-4E33-4D12-8DA9-FF596B4E07BE}|..\\servidor.cs\\Servidor.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\servidor.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -29,11 +20,11 @@
       "AbsoluteMoniker": "D:0:0:{B7765585-4E33-4D12-8DA9-FF596B4E07BE}|..\\servidor.cs\\Servidor.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\servidor.cs\\servidor.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8E299B5-08C2-409C-B0A0-5D99557A89ED}|..\\wavy.cs\\Wavy.cs.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\wavy.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\sd\\analysisservice\\protos\\analyze.proto||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|solutionrelative:analysisservice\\protos\\analyze.proto||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\sd\\analysisservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|solutionrelative:analysisservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{B8E299B5-08C2-409C-B0A0-5D99557A89ED}|..\\wavy.cs\\Wavy.cs.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\wavy.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B8E299B5-08C2-409C-B0A0-5D99557A89ED}|..\\wavy.cs\\Wavy.cs.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\wavy.cs\\wavy.cs.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
@@ -49,21 +40,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\Program.cs",
-              "RelativeDocumentMoniker": "..\\servidor.cs\\Program.cs",
-              "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\Program.cs",
-              "RelativeToolTip": "..\\servidor.cs\\Program.cs",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAQwAYAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-27T15:52:28.168Z",
-              "IsPinned": true
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
@@ -78,39 +56,27 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\appsettings.json",
-              "RelativeDocumentMoniker": "AnalysisService\\appsettings.json",
-              "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\appsettings.json",
-              "RelativeToolTip": "AnalysisService\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-05-27T16:06:26.481Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\Program.cs",
-              "RelativeDocumentMoniker": "AnalysisService\\Program.cs",
-              "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\Program.cs",
-              "RelativeToolTip": "AnalysisService\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-27T16:03:28.907Z"
+              "Title": "analyze.proto",
+              "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\analyze.proto",
+              "RelativeDocumentMoniker": "..\\servidor.cs\\analyze.proto",
+              "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\analyze.proto",
+              "RelativeToolTip": "..\\servidor.cs\\analyze.proto",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003853|",
+              "WhenOpened": "2025-05-28T12:49:46.5Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "AnalysisService.csproj",
-              "DocumentMoniker": "C:\\Users\\maria\\Source\\Repos\\SD_PL3\\SD\\AnalysisService\\AnalysisService.csproj",
-              "RelativeDocumentMoniker": "AnalysisService\\AnalysisService.csproj",
-              "ToolTip": "C:\\Users\\maria\\Source\\Repos\\SD_PL3\\SD\\AnalysisService\\AnalysisService.csproj",
-              "RelativeToolTip": "AnalysisService\\AnalysisService.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-05-27T16:01:38.628Z"
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\Program.cs",
+              "RelativeDocumentMoniker": "..\\servidor.cs\\Program.cs",
+              "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\Program.cs",
+              "RelativeToolTip": "..\\servidor.cs\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-28T12:44:27.38Z"
             },
             {
               "$type": "Document",
@@ -120,14 +86,14 @@
               "RelativeDocumentMoniker": "AnalysisService\\Services\\AnalysisServiceImp.cs",
               "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\Services\\AnalysisServiceImp.cs",
               "RelativeToolTip": "AnalysisService\\Services\\AnalysisServiceImp.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABSAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-27T15:47:21.109Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "Servidor.csproj",
               "DocumentMoniker": "C:\\Users\\maria\\Source\\Repos\\SD_PL3\\servidor.cs\\Servidor.csproj",
               "RelativeDocumentMoniker": "..\\servidor.cs\\Servidor.csproj",
@@ -139,7 +105,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "analyze.proto",
               "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\analyze.proto",
               "RelativeDocumentMoniker": "analyze.proto",
@@ -151,7 +117,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "analyze.proto",
               "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\Protos\\analyze.proto",
               "RelativeDocumentMoniker": "AnalysisService\\Protos\\analyze.proto",
@@ -163,7 +129,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\wavy.cs\\Program.cs",
               "RelativeDocumentMoniker": "..\\wavy.cs\\Program.cs",
@@ -175,7 +141,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 7,
               "Title": "Wavy.cs.csproj",
               "DocumentMoniker": "C:\\Users\\maria\\Source\\Repos\\SD_PL3\\wavy.cs\\Wavy.cs.csproj",
               "RelativeDocumentMoniker": "..\\wavy.cs\\Wavy.cs.csproj",
@@ -187,7 +153,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 8,
               "Title": "Google.Protobuf.Tools.targets",
               "DocumentMoniker": "C:\\Users\\maria\\.nuget\\packages\\grpc.tools\\2.57.0\\build\\_protobuf\\Google.Protobuf.Tools.targets",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\.nuget\\packages\\grpc.tools\\2.57.0\\build\\_protobuf\\Google.Protobuf.Tools.targets",
