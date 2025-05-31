@@ -58,6 +58,14 @@
               "target": "Package",
               "version": "[8.0.1, )"
             },
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.71.0, )"
+            },
+            "Grpc.Tools": {
+              "target": "Package",
+              "version": "[2.72.0, )"
+            },
             "RabbitMQ.Client": {
               "target": "Package",
               "version": "[7.1.2, )"

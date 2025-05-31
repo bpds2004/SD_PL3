@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "Analyze";
+
+service AnalysisService {
+  rpc Analyze (AnalyzeRequest) returns (AnalysisResult);
+}
+
+message AnalyzeRequest {
+  string sensor = 1;
+}
+
+message AnalysisResult {
+  int32 count = 1;
+  double average = 2;
+}

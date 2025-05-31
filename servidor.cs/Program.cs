@@ -1,14 +1,13 @@
-﻿using System.Net.Sockets;
-using System.Net;
-using System;
+﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using RabbitMQ.Client;
+using Grpc.Net.Client;
+using Analyze;
 
 class Servidor
 {
-    // Objeto de bloqueio para escrita segura no ficheiro
     static readonly object lockFicheiro = new object();
 
     static void Main()
@@ -17,15 +16,17 @@ class Servidor
         listener.Start();
         Console.WriteLine("[SERVIDOR] A ouvir na porta 6000...");
 
-        // Criar ficheiro CSV com cabeçalho se ainda não existir
         string ficheiroCsv = "dados.csv";
         if (!File.Exists(ficheiroCsv))
         {
             using (StreamWriter sw = new StreamWriter(ficheiroCsv, append: false))
             {
-                sw.WriteLine("id_wavy,sensor,valor");
+                sw.WriteLine("id_wavy,sensor,valor,hora");
             }
         }
+
+        // Thread separada para menu de análise RPC
+        new Thread(() => MenuAnalise()).Start();
 
         while (true)
         {
@@ -72,19 +73,19 @@ class Servidor
                     Console.WriteLine("  " + d);
                 }
 
-                // Escreve todos os dados num único ficheiro CSV
                 lock (lockFicheiro)
                 {
                     using (StreamWriter sw = new StreamWriter("dados.csv", append: true))
                     {
                         foreach (string linha in dados)
                         {
-                            string[] partes = linha.Split(':');
-                            if (partes.Length == 2)
+                            string[] partes = linha.Split(';');
+                            if (partes.Length == 4)
                             {
-                                string sensor = partes[0];
-                                string valor = partes[1];
-                                sw.WriteLine($"{id},{sensor},{valor}");
+                                string sensor = partes[1];
+                                string valor = partes[2];
+                                string hora = partes[3];
+                                sw.WriteLine($"{id},{sensor},{valor},{hora}");
                             }
                         }
                     }
@@ -102,5 +103,27 @@ class Servidor
             client.Close();
         }
     }
-}
 
+    static void MenuAnalise()
+    {
+        while (true)
+        {
+            Console.WriteLine("\n[SERVIDOR] Introduza o nome do sensor para análise (ex: temperatura), ou ENTER para ignorar:");
+            string sensor = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(sensor)) continue;
+
+            try
+            {
+                using var channel = GrpcChannel.ForAddress("http://localhost:5002");
+                var client = new AnalysisService.AnalysisServiceClient(channel);
+
+                var resposta = client.Analyze(new AnalyzeRequest { Sensor = sensor });
+                Console.WriteLine($"[SERVIDOR] Análise RPC: Sensor = {sensor}, Média = {resposta.Average:F2}, Total = {resposta.Count}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[SERVIDOR] Erro ao contactar serviço de análise: " + ex.Message);
+            }
+        }
+    }
+}
