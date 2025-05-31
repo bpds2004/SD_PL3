@@ -3,15 +3,15 @@
   "WorkspaceRootPath": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\sd\\analysisservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|solutionrelative:analysisservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B7765585-4E33-4D12-8DA9-FF596B4E07BE}|..\\servidor.cs\\Servidor.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\servidor.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\sd\\analysisservice\\services\\analysisserviceimp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|solutionrelative:analysisservice\\services\\analysisserviceimp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\sd\\analysisservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{54CAB749-B77A-4770-A59B-1F4DE957123A}|AnalysisService\\AnalysisService.csproj|solutionrelative:analysisservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BFA3203F-0CA3-4AE0-BC11-F8849D431B5A}|..\\agregador.cs\\Agregador.csproj|c:\\users\\maria\\source\\repos\\sd_pl3\\agregador.cs\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -54,6 +54,10 @@
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "Program.cs",
@@ -68,7 +72,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\Program.cs",
               "RelativeDocumentMoniker": "AnalysisService\\Program.cs",
@@ -81,7 +85,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\servidor.cs\\Program.cs",
               "RelativeDocumentMoniker": "..\\servidor.cs\\Program.cs",
@@ -94,12 +98,12 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "AnalysisServiceImp.cs",
               "DocumentMoniker": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\Services\\AnalysisServiceImp.cs",
               "RelativeDocumentMoniker": "AnalysisService\\Services\\AnalysisServiceImp.cs",
-              "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\Services\\AnalysisServiceImp.cs*",
-              "RelativeToolTip": "AnalysisService\\Services\\AnalysisServiceImp.cs*",
+              "ToolTip": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\AnalysisService\\Services\\AnalysisServiceImp.cs",
+              "RelativeToolTip": "AnalysisService\\Services\\AnalysisServiceImp.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-27T15:47:21.109Z",
@@ -115,8 +119,7 @@
               "RelativeToolTip": "..\\servidor.cs\\analyze.proto",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003853|",
-              "WhenOpened": "2025-05-28T12:49:46.5Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-28T12:49:46.5Z"
             },
             {
               "$type": "Document",
@@ -128,8 +131,7 @@
               "RelativeToolTip": "..\\servidor.cs\\Servidor.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-05-27T16:17:25.836Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-27T16:17:25.836Z"
             },
             {
               "$type": "Document",
@@ -141,8 +143,7 @@
               "RelativeToolTip": "..\\wavy.cs\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-27T16:43:19.998Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-27T16:43:19.998Z"
             },
             {
               "$type": "Document",
@@ -154,8 +155,7 @@
               "RelativeToolTip": "..\\wavy.cs\\Wavy.cs.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-05-27T16:26:53.477Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-27T16:26:53.477Z"
             },
             {
               "$type": "Document",
@@ -167,8 +167,7 @@
               "RelativeToolTip": "..\\..\\..\\..\\.nuget\\packages\\grpc.tools\\2.57.0\\build\\_protobuf\\Google.Protobuf.Tools.targets",
               "ViewState": "AgIAAJ4AAAAAAAAAAAAkwKoAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
-              "WhenOpened": "2025-05-27T15:47:31.291Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-27T15:47:31.291Z"
             }
           ]
         }
