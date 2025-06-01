@@ -1,1 +1,3 @@
-pika
+pika 
+
+# falta fazer no terminal : pip install -r requirements.txt

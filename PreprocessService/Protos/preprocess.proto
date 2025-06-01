@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "Preprocess";
+
+service PreprocessService {
+  rpc Preprocess (PreprocessRequest) returns (PreprocessResponse);
+}
+
+message PreprocessRequest {
+  string id = 1;
+  string sensor = 2;
+  string valor = 3;
+  string timestamp = 4;
+}
+
+message PreprocessResponse {
+  string id = 1;
+  string sensor = 2;
+  float valor = 3;
+  int64 timestamp = 4;
+}
