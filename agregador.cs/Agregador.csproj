@@ -10,8 +10,14 @@
 	<ItemGroup>
 		<PackageReference Include="ClosedXML" Version="0.101.0" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.72.0">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
 	</ItemGroup>
-
+<ItemGroup>
+  <Protobuf Include="preprocess.proto" GrpcServices="Client" />
+</ItemGroup>
 </Project>
 
