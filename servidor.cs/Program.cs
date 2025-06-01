@@ -73,23 +73,19 @@ class Servidor
                     Console.WriteLine("  " + d);
                 }
 
-                lock (lockFicheiro)
+                foreach (string linha in dados)
                 {
-                    using (StreamWriter sw = new StreamWriter("dados.csv", append: true))
+                    string[] partes = linha.Split(';');
+                    if (partes.Length == 3)
                     {
-                        foreach (string linha in dados)
-                        {
-                            string[] partes = linha.Split(';');
-                            if (partes.Length == 4)
-                            {
-                                string sensor = partes[1];
-                                string valor = partes[2];
-                                string hora = partes[3];
-                                sw.WriteLine($"{id},{sensor},{valor},{hora}");
-                            }
-                        }
+                        string sensor = partes[0];
+                        double valor = double.Parse(partes[1]);
+                        long timestamp = long.Parse(partes[2]);
+
+                        BaseDados.GuardarDado(id, sensor, valor, timestamp);
                     }
                 }
+                Console.WriteLine("[SERVIDOR] Dados guardados na base de dados.");
 
                 writer.WriteLine("301 BULK_STORED");
             }
@@ -119,6 +115,8 @@ class Servidor
 
                 var resposta = client.Analyze(new AnalyzeRequest { Sensor = sensor });
                 Console.WriteLine($"[SERVIDOR] Análise RPC: Sensor = {sensor}, Média = {resposta.Average:F2}, Total = {resposta.Count}");
+                BaseDados.GuardarAnalise(sensor, resposta.Average, resposta.Count);
+                Console.WriteLine("[SERVIDOR] Análise guardada na base de dados.");
             }
             catch (Exception ex)
             {

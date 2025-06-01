@@ -8,11 +8,15 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Grpc.Net.Client;
 using Preprocess; 
+using System.Data.SQLite;
+
 
 class Agregador
 {
     static void Main()
     {
+        BaseDados.Inicializar();
+        Console.WriteLine("[AGREGADOR] Iniciando o Agregador...");
         Console.Write("[AGREGADOR] Quantos Agregadores pretende criar? ");
         int numAgregadores = int.Parse(Console.ReadLine());
 

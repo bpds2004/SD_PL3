@@ -1,31 +1,29 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\SD.csproj": {}
+    "C:\\Users\\bibi2\\OneDrive\\Documentos\\GitHub\\SD_PL3\\SD\\SD.csproj": {}
   },
   "projects": {
-    "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\SD.csproj": {
+    "C:\\Users\\bibi2\\OneDrive\\Documentos\\GitHub\\SD_PL3\\SD\\SD.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\SD.csproj",
+        "projectUniqueName": "C:\\Users\\bibi2\\OneDrive\\Documentos\\GitHub\\SD_PL3\\SD\\SD.csproj",
         "projectName": "SD",
-        "projectPath": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\SD.csproj",
-        "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\maria\\source\\repos\\SD_PL3\\SD\\obj\\",
+        "projectPath": "C:\\Users\\bibi2\\OneDrive\\Documentos\\GitHub\\SD_PL3\\SD\\SD.csproj",
+        "packagesPath": "C:\\Users\\bibi2\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\bibi2\\OneDrive\\Documentos\\GitHub\\SD_PL3\\SD\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\maria\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\bibi2\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,7 +42,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -62,7 +60,13 @@
               "target": "Package",
               "version": "[2.71.0, )"
             },
+            "Grpc.Net.Client": {
+              "target": "Package",
+              "version": "[2.71.0, )"
+            },
             "Grpc.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
               "version": "[2.72.0, )"
             },
@@ -86,12 +90,30 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.16, 8.0.16]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.16, 8.0.16]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.16, 8.0.16]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.16, 8.0.16]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
