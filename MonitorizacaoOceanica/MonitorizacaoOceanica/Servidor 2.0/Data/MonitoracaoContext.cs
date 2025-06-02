@@ -28,7 +28,7 @@ namespace Servidor20.Data
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                  "Server=localhost,1433;" +
+                  "Server=LAPTOP-ARGIGG5L\\35196;" +
                   "Database=MonitorizacaoOceanica;" +
                   "Trusted_Connection=True;" +
                   "Encrypt=False;" +
