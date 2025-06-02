@@ -29,6 +29,7 @@ class WavyBasica
     static int erroEnvioCount = 0;
     static int erroEnvioMax = 10;
 
+
     static void Main(string[] args)
     {
         // Se for interrompida com Ctrl+C, envia aviso de desligar, remove do ficheiro e fecha
@@ -60,6 +61,8 @@ class WavyBasica
 
         // Envia mensagem REGISTO ao Agregador
         RegistarWavy(agregadorIp, agregadorPorta, agregadorId);
+        
+
 
         // Marca estado "associada" no Agregador (ficheiro estado_wavys.txt)
         EnviarEstado("associada");
@@ -137,17 +140,98 @@ class WavyBasica
     /// Envia a mensagem "REGISTO | wavyId | agregadorId | WAVY_Básica" ao Agregador.
     static void RegistarWavy(string ip, int porta, string aggId)
     {
-        TcpClient client = new TcpClient(ip, porta);
-        NetworkStream stream = client.GetStream();
-        string msg = $"REGISTO | {wavyId} | {aggId} | {tipoWavy}";
-        stream.Write(Encoding.UTF8.GetBytes(msg));
+        int tentativas = 0;
+        int maxTentativas = 5;
+
+        while (tentativas < maxTentativas)
+        {
+            try
+            {
+                Console.WriteLine($"[{wavyId}] Tentativa {tentativas + 1} de conexão com {ip}:{porta}");
+
+                TcpClient client = new TcpClient();
+                // Timeout de 5 segundos para conexão
+                client.ReceiveTimeout = 5000;
+                client.SendTimeout = 5000;
+
+                // Conecta com timeout
+                var result = client.BeginConnect(ip, porta, null, null);
+                var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
+
+                if (!success)
+                {
+                    throw new TimeoutException("Timeout na conexão");
+                }
+
+                client.EndConnect(result);
+                NetworkStream stream = client.GetStream();
+
+                string msg = $"REGISTO | {wavyId} | {aggId} | {tipoWavy}";
+                byte[] data = Encoding.UTF8.GetBytes(msg);
+                stream.Write(data, 0, data.Length);
+
+                // Lê a resposta (CONFIRMADO / ERRO)
+                byte[] buffer = new byte[1024];
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                string resposta = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+
+                Console.WriteLine($"[{wavyId}] Registo bem-sucedido: {resposta}");
+                client.Close();
+                return; // Sucesso, sai da função
+            }
+            catch (SocketException ex)
+            {
+                Console.WriteLine($"[{wavyId}] Erro de conexão (tentativa {tentativas + 1}): {ex.Message}");
+
+                if (ex.Message.Contains("recusou"))
+                {
+                    Console.WriteLine($"[{wavyId}] O Agregador em {ip}:{porta} não está disponível.");
+                }
+            }
+            catch (TimeoutException ex)
+            {
+                Console.WriteLine($"[{wavyId}] Timeout na conexão: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[{wavyId}] Erro inesperado: {ex.Message}");
+            }
+
+            tentativas++;
+            if (tentativas < maxTentativas)
+            {
+                Console.WriteLine($"[{wavyId}] Aguardando 3 segundos antes da próxima tentativa...");
+                Thread.Sleep(3000);
+            }
+        }
+
+        // Se chegou aqui, todas as tentativas falharam
+        Console.WriteLine($"[{wavyId}] ERRO: Não foi possível conectar ao Agregador após {maxTentativas} tentativas.");
+        Console.WriteLine($"[{wavyId}] Verifique se o Agregador está rodando em {ip}:{porta}");
+
+        // Pergunta ao utilizador se quer continuar ou encerrar
+        Console.WriteLine($"[{wavyId}] Pressione 'c' para continuar sem registo ou qualquer tecla para encerrar:");
+        var key = Console.ReadLine();
+        if (key?.ToLower() != "c")
+        {
+            RemoverRegisto();
+            Environment.Exit(1);
+        }
+    }
+    /// Envia a mensagem "REGISTO | wavyId | agregadorId | WAVY_Básica" ao Agregador.
+   // static void RegistarWavy(string ip, int porta, string aggId)
+   // {
+     //   TcpClient client = new TcpClient(ip, porta);
+       // NetworkStream stream = client.GetStream();
+       // string msg = $"REGISTO | {wavyId} | {aggId} | {tipoWavy}";
+       // stream.Write(Encoding.UTF8.GetBytes(msg));
 
         // Lê a resposta (CONFIRMADO / ERRO)
-        byte[] buffer = new byte[1024];
-        int bytesRead = stream.Read(buffer, 0, buffer.Length);
-        Console.WriteLine($"[{wavyId}] Registo: {Encoding.UTF8.GetString(buffer, 0, bytesRead)}");
-        client.Close();
-    }
+//        byte[] buffer = new byte[1024];
+  //      int bytesRead = stream.Read(buffer, 0, buffer.Length);
+    //    Console.WriteLine($"[{wavyId}] Registo: {Encoding.UTF8.GetString(buffer, 0, bytesRead)}");
+      //  client.Close();
+   // }
 
     /// Thread que a cada 60s lê o estado no Agregador. Se for "operação" ou "associada", envia dados.
     /// Caso seja "manutenção" ou outro, pausa o envio (imprime aviso).
