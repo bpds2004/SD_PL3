@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Servidor20.Models
+namespace Servidor.Models
 {
     public class Registo
     {
