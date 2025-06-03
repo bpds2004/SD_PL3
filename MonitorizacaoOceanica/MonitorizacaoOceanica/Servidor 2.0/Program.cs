@@ -10,13 +10,13 @@ using Grpc.Net.Client;
 using Analyze;            // gRPC Analysis service namespace
 using Preprocess;         // gRPC Preprocess service namespace
 using Microsoft.EntityFrameworkCore;
-using Servidor20.Data;    // EF Core DbContext namespace
-using Servidor20.Models;  // EF Core entity namespace
+using Servidor.Data;    // EF Core DbContext namespace
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using Servidor20.Models;
 
-namespace Servidor20
+namespace Servidor
 {
 
 
