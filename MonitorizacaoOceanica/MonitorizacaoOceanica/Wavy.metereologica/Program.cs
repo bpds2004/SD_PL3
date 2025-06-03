@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-class WavyMeteorologica
+class WavyThv
 {
     // Identificação desta WAVY e seu tipo (Meteorológica)
     static string wavyId;

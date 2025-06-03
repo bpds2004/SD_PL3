@@ -7,7 +7,8 @@ using System.Threading;
 using RabbitMQ.Client;
 
 
-class WavyBasica
+class WavyTemp
+
 {
     // Identificador único desta WAVY e o seu tipo
     static string wavyId;
@@ -218,23 +219,7 @@ class WavyBasica
             Environment.Exit(1);
         }
     }
-    /// Envia a mensagem "REGISTO | wavyId | agregadorId | WAVY_Básica" ao Agregador.
-   // static void RegistarWavy(string ip, int porta, string aggId)
-   // {
-     //   TcpClient client = new TcpClient(ip, porta);
-       // NetworkStream stream = client.GetStream();
-       // string msg = $"REGISTO | {wavyId} | {aggId} | {tipoWavy}";
-       // stream.Write(Encoding.UTF8.GetBytes(msg));
-
-        // Lê a resposta (CONFIRMADO / ERRO)
-//        byte[] buffer = new byte[1024];
-  //      int bytesRead = stream.Read(buffer, 0, buffer.Length);
-    //    Console.WriteLine($"[{wavyId}] Registo: {Encoding.UTF8.GetString(buffer, 0, bytesRead)}");
-      //  client.Close();
-   // }
-
-    /// Thread que a cada 60s lê o estado no Agregador. Se for "operação" ou "associada", envia dados.
-    /// Caso seja "manutenção" ou outro, pausa o envio (imprime aviso).
+    
     static void EnvioPeriodico(string ip, int porta)
     {
         while (ativo)

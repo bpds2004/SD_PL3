@@ -7,7 +7,7 @@ using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 
-class WavyPro
+class WavyTp
 {
     // Identificação e tipo desta WAVY
     static string wavyId;

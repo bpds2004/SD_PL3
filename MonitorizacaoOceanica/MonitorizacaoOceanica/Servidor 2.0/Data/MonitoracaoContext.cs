@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Servidor20.Models;
 
-namespace Servidor20.Data
+namespace Servidor.Data
 {
     public class MonitoracaoContext : DbContext
     {

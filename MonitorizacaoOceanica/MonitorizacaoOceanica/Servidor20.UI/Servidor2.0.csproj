@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<!-- O teu DbContext e entidades -->
-		<ProjectReference Include="..\Servidor 2.0\Servidor20.csproj" />
+		<ProjectReference Include="..\Servidor 2.0\Servidor.csproj" />
 
 		<!-- Serviços gRPC -->
 		<Protobuf Include="..\preprocess.proto" GrpcServices="Client" />
