@@ -12,17 +12,17 @@ using Preprocess;         // gRPC Preprocess service namespace
 using Microsoft.EntityFrameworkCore;
 using Servidor20.Data;    // EF Core DbContext namespace
 using Servidor20.Models;  // EF Core entity namespace
+using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Servidor20
 {
+
+
     class Servidor
     {
-        static string connString =
-          "Server=localhost,1433;" +
-          "Database=MonitorizacaoOceanica;" +
-          "Trusted_Connection=True;" +
-          "Encrypt=False;" +
-          "TrustServerCertificate=True;";
+        static string connString = "Server=localhost,1433;Database=MonitorizacaoOceanica;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;\r\n";
 
         // gRPC channels & clients
         private static readonly GrpcChannel _analysisChannel =
@@ -191,7 +191,10 @@ namespace Servidor20
                             };
 
                             // EF Core save
-                            using (var db = new MonitoracaoContext())
+                            var options = new DbContextOptionsBuilder<MonitoracaoContext>()
+                                .UseSqlServer(connString)
+                                .Options;
+                            using (var db = new MonitoracaoContext(options))
                             {
                                 db.Registos.Add(reg);
                                 db.SaveChanges();
