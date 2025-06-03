@@ -2,177 +2,310 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>🌊 Monitorização Oceânica</title>
+    <title>Monitorização Oceânica</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap e ícones -->
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             background-color: #1e1e2f;
-            color: #f5f5f5;
+            color: #fff;
         }
 
-        .navbar {
-            background-color: #0d6efd;
+        .sidebar {
+            min-height: 100vh;
+            background-color: #111827;
         }
 
-        .nav-tabs .nav-link {
-            color: #ccc;
-        }
-
-            .nav-tabs .nav-link.active {
-                background-color: #0d6efd;
-                color: white;
-                border-color: transparent;
+            .sidebar a {
+                color: #d1d5db;
+                padding: 1rem;
+                display: block;
+                text-decoration: none;
             }
 
+                .sidebar a:hover,
+                .sidebar a.active {
+                    background-color: #2563eb;
+                    color: white;
+                }
+
         .card {
-            background-color: #2c2c3a;
+            background-color: #2c2f48;
             border: none;
-            color: #fff;
+            color: white;
+        }
+
+        .form-control,
+        .form-select {
+            background-color: #374151;
+            color: white;
+            border: none;
         }
 
         .table {
-            color: #fff;
+            color: white;
         }
 
             .table th {
-                background-color: #444;
+                background-color: #374151;
             }
 
-        .btn-primary, .btn-success, .btn-outline-primary {
-            border-radius: 20px;
+        .btn-primary {
+            background-color: #2563eb;
+            border: none;
+        }
+
+        .d-none {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-tsunami"></i> Monitorização Oceânica</a>
-        </div>
-    </nav>
-
-    <div class="container py-4">
-        <ul class="nav nav-tabs mb-4" id="tabMenu">
-            <li class="nav-item">
-                <a class="nav-link active" href="#" id="navRegistos"><i class="bi bi-list-ul"></i> Registos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" id="navAnalises"><i class="bi bi-graph-up"></i> Análises</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" id="navManual"><i class="bi bi-gear"></i> Manual</a>
-            </li>
-        </ul>
-
-        <!-- Registos -->
-        <div id="tabRegistos" class="tab-content">
-            <div class="card mb-3">
-                <div class="card-header">Filtros de Registos</div>
-                <div class="card-body">
-                    <form id="filtrosRegistos" class="row g-3">
-                        <div class="col-md-4">
-                            <input type="text" id="fWavy" class="form-control" placeholder="WavyId (ex: WAVY_01)">
-                        </div>
-                        <div class="col-md-4">
-                            <select id="fTipoMsg" class="form-select">
-                                <option value="">(Todos)</option>
-                                <option value="DADOS">DADOS</option>
-                                <option value="REGISTO">REGISTO</option>
-                                <option value="ANALISE">ANALISE</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn btn-outline-primary w-100">Filtrar</button>
-                        </div>
-                    </form>
-                </div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <h4 class="text-white text-center py-3">Oceanic</h4>
+                <a href="#" class="active" id="linkRegistos">📈 Registos</a>
+                <a href="#" id="linkAnalises">📊 Análises</a>
+                <a href="#" id="linkManual">🛠 Manual</a>
             </div>
 
-            <div class="card">
-                <div class="card-header">Últimos 100 Registos</div>
-                <div class="card-body p-0">
-                    <table class="table table-dark table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Timestamp</th>
-                                <th>Wavy</th>
-                                <th>Sensor</th>
-                                <th>Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tblRegistosBody">
-                            <tr><td colspan="4" class="text-center py-3">A carregar…</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer text-center">
-                    <ul class="pagination justify-content-center mb-0">
-                        <li class="page-item"><button class="page-link" id="btnPrev">«</button></li>
-                        <li class="page-item disabled"><span class="page-link" id="pageInfo">1</span></li>
-                        <li class="page-item"><button class="page-link" id="btnNext">»</button></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+            <!-- Conteúdo principal -->
+            <div class="col-md-10 p-4">
+                <h2>Dashboard de Monitorização</h2>
 
-        <!-- Análises -->
-        <div id="tabAnalises" class="tab-content" style="display:none">
-            <div class="card">
-                <div class="card-header">Análises Automáticas</div>
-                <div class="card-body p-0">
-                    <table class="table table-striped mb-0">
-                        <thead>
-                            <tr>
-                                <th>Timestamp</th>
-                                <th>Sensor</th>
-                                <th>Média</th>
-                                <th>Desvio Padrão</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tblAnalisesBody">
-                            <tr><td colspan="4" class="text-center py-3">Sem dados…</td></tr>
-                        </tbody>
-                    </table>
+                <!-- Cartões estatísticos -->
+                <div class="row my-4">
+                    <div class="col-md-4">
+                        <div class="card p-3">
+                            <h5>Temperatura</h5>
+                            <p class="fs-4">21.3 ºC</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-3">
+                            <h5>Humidade</h5>
+                            <p class="fs-4">78%</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-3">
+                            <h5>Velocidade do Vento</h5>
+                            <p class="fs-4">12.6 km/h</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Análise Manual -->
-        <div id="tabManual" class="tab-content" style="display:none">
-            <div class="card">
-                <div class="card-header">Análise Manual</div>
-                <div class="card-body">
-                    <form id="formManual" class="row g-3">
-                        <div class="col-md-3">
-                            <select id="mSensor" class="form-select" required>
-                                <option value="">Seleciona sensor</option>
-                                <option>Temperatura</option>
-                                <option>Pressão</option>
-                                <option>Humidade</option>
-                                <option>Velocidade do Vento</option>
-                            </select>
+                <!-- Tabs de conteúdo -->
+                <div id="tabRegistos">
+                    <div class="card p-4 mb-4">
+                        <h4>Filtros</h4>
+                        <form id="filtrosRegistos" class="row g-3">
+                            <div class="col-md-4">
+                                <input id="fWavy" type="text" class="form-control" placeholder="Wavy ID">
+                            </div>
+                            <div class="col-md-4">
+                                <select id="fTipoMsg" class="form-select">
+                                    <option value="">Tipo de Mensagem</option>
+                                    <option value="DADOS">DADOS</option>
+                                    <option value="REGISTO">REGISTO</option>
+                                    <option value="ANALISE">ANÁLISE</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary w-100">Filtrar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card p-4">
+                        <h4>Últimos Registos</h4>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Wavy</th>
+                                    <th>Sensor</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblRegistosBody">
+                                <tr><td colspan="4" class="text-center">A carregar…</td></tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-secondary" id="btnPrev">«</button>
+                            <span id="pageInfo">Página 1</span>
+                            <button class="btn btn-secondary" id="btnNext">»</button>
                         </div>
-                        <div class="col-md-3">
-                            <input type="datetime-local" id="mDi" class="form-control" required>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="datetime-local" id="mDf" class="form-control" required>
-                        </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-success w-100">Analisar</button>
-                        </div>
-                    </form>
-                    <div id="mResult" class="alert alert-info d-none mt-3"></div>
+                    </div>
+                </div>
+
+                <div id="tabAnalises" style="display: none;">
+                    <div class="card p-4">
+                        <h4>Análises Automáticas</h4>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Sensor</th>
+                                    <th>Média</th>
+                                    <th>Desvio Padrão</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblAnalisesBody">
+                                <tr><td colspan="4" class="text-center">Sem dados…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="tabManual" style="display: none;">
+                    <div class="card p-4">
+                        <h4>Análise Manual</h4>
+                        <form id="formManual" class="row g-3">
+                            <div class="col-md-4">
+                                <select id="mSensor" class="form-select" required>
+                                    <option value="">Seleciona sensor</option>
+                                    <option>Temperatura</option>
+                                    <option>Pressão</option>
+                                    <option>Humidade</option>
+                                    <option>Velocidade do Vento</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="datetime-local" id="mDi" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="datetime-local" id="mDf" class="form-control" required>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-success w-100">Analisar</button>
+                            </div>
+                        </form>
+                        <div id="mResult" class="alert d-none mt-3"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JS -->
+    <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/app.js"></script>
+
+    <!-- Script Adaptado -->
+    <script>
+        (() => {
+            let registos = [], page = 0, pageSize = 10;
+
+            const $ = s => document.querySelector(s);
+            const navs = {
+                reg: $('#linkRegistos'),
+                ana: $('#linkAnalises'),
+                man: $('#linkManual')
+            };
+            const tabs = {
+                reg: $('#tabRegistos'),
+                ana: $('#tabAnalises'),
+                man: $('#tabManual')
+            };
+
+            // navegação entre tabs
+            Object.entries(navs).forEach(([k, el]) => {
+                el.onclick = e => {
+                    e.preventDefault();
+                    Object.values(navs).forEach(n => n.classList.remove('active'));
+                    Object.values(tabs).forEach(t => t.style.display = 'none');
+                    el.classList.add('active');
+                    tabs[k].style.display = 'block';
+                };
+            });
+
+            async function loadRegistos() {
+                const resp = await fetch('/registos');
+                registos = await resp.json();
+                page = 0;
+                renderRegistos();
+            }
+
+            function renderRegistos() {
+                const tbody = $('#tblRegistosBody');
+                tbody.innerHTML = '';
+                const filtroW = $('#fWavy').value.trim().toUpperCase();
+                const filtroM = $('#fTipoMsg').value;
+                const lista = registos
+                    .filter(r => (!filtroW || r.wavyId === filtroW))
+                    .filter(r => (!filtroM || r.tipoMensagem === filtroM));
+                const start = page * pageSize;
+                const pageData = lista.slice(start, start + pageSize);
+                for (let r of pageData) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                    <td>${new Date(r.timestamp).toLocaleString()}</td>
+                    <td>${r.wavyId || '-'}</td>
+                    <td>${r.tipoDado || '-'}</td>
+                    <td>${r.valor ?? '-'}</td>`;
+                    tbody.appendChild(tr);
+                }
+                $('#pageInfo').textContent = `Página ${page + 1} de ${Math.ceil(lista.length / pageSize)}`;
+            }
+
+            $('#filtrosRegistos').onsubmit = e => {
+                e.preventDefault();
+                page = 0;
+                renderRegistos();
+            };
+
+            $('#btnPrev').onclick = () => {
+                if (page > 0) page--, renderRegistos();
+            };
+            $('#btnNext').onclick = () => {
+                page++;
+                renderRegistos();
+            };
+
+            async function loadAnalises() {
+                const di = '2000-01-01';
+                const df = new Date().toISOString();
+                const resp = await fetch(`/analises?sensor=Temperatura&di=${di}&df=${df}`);
+                const data = await resp.json();
+                const tbody = $('#tblAnalisesBody');
+                tbody.innerHTML = '';
+                data.forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                    <td>${new Date(r.timestamp).toLocaleString()}</td>
+                    <td>${r.tipoDado}</td>
+                    <td>${r.media.toFixed(1)}</td>
+                    <td>${r.desvioPadrao.toFixed(2)}</td>`;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            $('#formManual').onsubmit = async e => {
+                e.preventDefault();
+                const sensor = $('#mSensor').value;
+                const di = $('#mDi').value;
+                const df = $('#mDf').value;
+                const res = await fetch(`/analise/manual?sensor=${sensor}&di=${di}&df=${df}`, { method: 'POST' });
+                const js = await res.json();
+                const $r = $('#mResult');
+                $r.classList.remove('d-none', 'alert-info', 'alert-danger', 'alert-success');
+                if (res.ok) {
+                    $r.classList.add('alert-success');
+                    $r.textContent = `Média=${js.media.toFixed(2)}, Desvio=${js.desvioPadrao.toFixed(2)}`;
+                    loadAnalises();
+                } else {
+                    $r.classList.add('alert-danger');
+                    $r.textContent = `Erro: ${js}`;
+                }
+            };
+
+            loadRegistos();
+            loadAnalises();
+        })();
+    </script>
 </body>
 </html>

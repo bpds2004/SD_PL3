@@ -3,9 +3,9 @@
 
     const $ = s => document.querySelector(s);
     const navs = {
-        reg: $('#navRegistos'),
-        ana: $('#navAnalises'),
-        man: $('#navManual')
+        reg: $('#linkRegistos'),
+        ana: $('#linkAnalises'),
+        man: $('#linkManual')
     };
     const tabs = {
         reg: $('#tabRegistos'),
@@ -24,11 +24,11 @@
         };
     });
 
-    // carregar registos
     async function loadRegistos() {
         const resp = await fetch('/registos');
         registos = await resp.json();
-        page = 0; renderRegistos();
+        page = 0;
+        renderRegistos();
     }
 
     function renderRegistos() {
@@ -44,10 +44,10 @@
         for (let r of pageData) {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-        <td>${new Date(r.timestamp).toLocaleString()}</td>
-        <td>${r.wavyId || '-'}</td>
-        <td>${r.tipoDado || '-'}</td>
-        <td>${r.valor ?? '-'}</td>`;
+                <td>${new Date(r.timestamp).toLocaleString()}</td>
+                <td>${r.wavyId || '-'}</td>
+                <td>${r.tipoDado || '-'}</td>
+                <td>${r.valor ?? '-'}</td>`;
             tbody.appendChild(tr);
         }
         $('#pageInfo').textContent = `Página ${page + 1} de ${Math.ceil(lista.length / pageSize)}`;
@@ -55,15 +55,21 @@
 
     $('#filtrosRegistos').onsubmit = e => {
         e.preventDefault();
-        page = 0; renderRegistos();
+        page = 0;
+        renderRegistos();
     };
-    $('#btnPrev').onclick = () => { if (page > 0) page--, renderRegistos(); };
-    $('#btnNext').onclick = () => { page++; renderRegistos(); };
 
-    // carregar análises
+    $('#btnPrev').onclick = () => {
+        if (page > 0) page--, renderRegistos();
+    };
+    $('#btnNext').onclick = () => {
+        page++;
+        renderRegistos();
+    };
+
     async function loadAnalises() {
-        // usa um intervalo grande para trazer todas
-        const di = '2000-01-01', df = new Date().toISOString();
+        const di = '2000-01-01';
+        const df = new Date().toISOString();
         const resp = await fetch(`/analises?sensor=Temperatura&di=${di}&df=${df}`);
         const data = await resp.json();
         const tbody = $('#tblAnalisesBody');
@@ -71,15 +77,14 @@
         data.forEach(r => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-        <td>${new Date(r.timestamp).toLocaleString()}</td>
-        <td>${r.tipoDado}</td>
-        <td>${r.media.toFixed(1)}</td>
-        <td>${r.desvioPadrao.toFixed(2)}</td>`;
+                <td>${new Date(r.timestamp).toLocaleString()}</td>
+                <td>${r.tipoDado}</td>
+                <td>${r.media.toFixed(1)}</td>
+                <td>${r.desvioPadrao.toFixed(2)}</td>`;
             tbody.appendChild(tr);
         });
     }
 
-    // análise manual
     $('#formManual').onsubmit = async e => {
         e.preventDefault();
         const sensor = $('#mSensor').value;
@@ -88,20 +93,18 @@
         const res = await fetch(`/analise/manual?sensor=${sensor}&di=${di}&df=${df}`, { method: 'POST' });
         const js = await res.json();
         const $r = $('#mResult');
-        $r.classList.remove('d-none', 'alert-info', 'alert-danger');
+        $r.classList.remove('d-none', 'alert-info', 'alert-danger', 'alert-success');
         if (res.ok) {
             $r.classList.add('alert-success');
             $r.textContent = `Média=${js.media.toFixed(2)}, Desvio=${js.desvioPadrao.toFixed(2)}`;
-            // recarrega as análises
             loadAnalises();
-        }
-        else {
+        } else {
             $r.classList.add('alert-danger');
             $r.textContent = `Erro: ${js}`;
         }
     };
 
-    // inicia tudo
     loadRegistos();
     loadAnalises();
 })();
+
