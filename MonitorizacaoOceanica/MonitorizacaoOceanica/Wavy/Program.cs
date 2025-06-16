@@ -18,7 +18,7 @@ class WavyTemp
     static bool ativo = true;
 
     // Ficheiro onde registamos todos os IDs de WAVYs criados
-    static string configFile = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\wavys_config.txt";
+    static string configFile = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\wavys_config.txt";
 
     // Dados do Agregador (IP, Porta, e ID do Agregador)
     static string agregadorIp;
@@ -115,7 +115,7 @@ class WavyTemp
     /// Retorna (ip, porta, agregadorId).
     static (string, int, string) EscolherAgregador()
     {
-        string agregadoresFile = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
+        string agregadoresFile = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
         if (!File.Exists(agregadoresFile))
         {
             Console.WriteLine("Nenhum agregador disponível.");
@@ -324,7 +324,7 @@ class WavyTemp
     /// Se não encontrar nada, assume 'operação'.
     static string ObterEstadoDaWavyNoAgregador()
     {
-        string estadoPath = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt";
+        string estadoPath = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt";
 
         // Se não existir o ficheiro, assumimos "operação"
         if (!File.Exists(estadoPath))

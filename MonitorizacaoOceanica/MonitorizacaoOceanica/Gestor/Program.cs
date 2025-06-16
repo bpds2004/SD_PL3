@@ -8,7 +8,7 @@ using System.Linq;
 
 class GestorPrincipal
 {
-    string agregadoresFile = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
+    string agregadoresFile = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
 
     static void Main()
     {
@@ -20,7 +20,7 @@ class GestorPrincipal
         int numAgregadores = int.Parse(Console.ReadLine() ?? "1");
 
         // 3) Apaga o ficheiro agregadores_config.txt antigo, para não ficar com configs velhas
-        string agregadoresFile = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
+        string agregadoresFile = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
         if (File.Exists(agregadoresFile))
         {
             File.Delete(agregadoresFile);
@@ -32,7 +32,7 @@ class GestorPrincipal
             Console.WriteLine($"[GESTOR] A iniciar Agregador #{i}...");
             Process.Start(new ProcessStartInfo
             {
-                FileName = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\Agregador\bin\Debug\net8.0\Agregador.exe",
+                FileName = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\Agregador\bin\Debug\net8.0\Agregador.exe",
                 UseShellExecute = true
             });
         }
@@ -82,7 +82,7 @@ class GestorPrincipal
                 // Indica ao Wavy o IP=127.0.0.1, a Porta e o ID do Agregador
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\Wavy\bin\Debug\net8.0\Wavy.basica.exe",
+                    FileName = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\Wavy\bin\Debug\net8.0\Wavy.basica.exe",
                     Arguments = $"127.0.0.1 {porta} {aggId}",
                     UseShellExecute = true
                 });
@@ -96,7 +96,7 @@ class GestorPrincipal
                 Console.WriteLine($"[GESTOR] A iniciar WAVY_Pro #{i} para {aggId}...");
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\Wavy.pro\bin\Debug\net8.0\Wavy.pro.exe",
+                    FileName = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\Wavy.pro\bin\Debug\net8.0\Wavy.pro.exe",
                     Arguments = $"127.0.0.1 {porta} {aggId}",
                     UseShellExecute = true
                 });
@@ -110,7 +110,7 @@ class GestorPrincipal
                 Console.WriteLine($"[GESTOR] A iniciar WAVY_Meteorologica #{i} para {aggId}...");
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\Wavy.metereologica\bin\Debug\net8.0\Wavy.metereologica.exe",
+                    FileName = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\Wavy.metereologica\bin\Debug\net8.0\Wavy.metereologica.exe",
                     Arguments = $"127.0.0.1 {porta} {aggId}",
                     UseShellExecute = true
                 });

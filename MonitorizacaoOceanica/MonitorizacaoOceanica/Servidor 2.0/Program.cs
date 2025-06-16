@@ -22,7 +22,7 @@ namespace Servidor
 
     class Servidor
     {
-        static string connString = "Server=localhost,1433;Database=MonitorizacaoOceanica;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;\r\n";
+        static string connString = "Server=localhost, 1433;Database=MonitorizacaoOceanica;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;\r\n";
 
         // gRPC channels & clients
         private static readonly GrpcChannel _analysisChannel =
@@ -32,7 +32,7 @@ namespace Servidor
 
         // Excel lock and path
         static object fileLock = new object();
-        static string excelFilePath = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\dados_servidor.xlsx";
+        static string excelFilePath = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\dados_servidor.xlsx";
 
         // Mutexes per agregador for thread-safe file writes
         static Dictionary<string, Mutex> ficheiroMutexes = new();
@@ -291,9 +291,9 @@ namespace Servidor
         {
             foreach (var f in new[]
             {
-                @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt",
-                @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\wavys_config.txt",
-                @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt"
+                @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt",
+                @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\wavys_config.txt",
+                @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt"
             })
             {
                 if (File.Exists(f))
@@ -306,7 +306,7 @@ namespace Servidor
 
         static void ApagarConteudoAgregadorData()
         {
-            var pasta = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregador_data\";
+            var pasta = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregador_data\";
             if (!Directory.Exists(pasta)) return;
             foreach (var f in Directory.GetFiles(pasta))
             {

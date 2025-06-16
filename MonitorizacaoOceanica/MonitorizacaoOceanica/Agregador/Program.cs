@@ -33,15 +33,15 @@ class Agregador
     static int porta;
 
     // Ficheiro global de config (ID|PORTA) para saber que Agregadores existem
-    static string configFile = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
+    static string configFile = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
 
     // Estado das WAVYs - "WAVY_01:operação::2025-04-20T10:00:00Z"
-    static string wavysEstadoFile = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt";
+    static string wavysEstadoFile = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt";
 
     static TcpListener? listener;
 
     // Base de onde os ficheiros são criados
-    static string basePath = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregador_data\";
+    static string basePath = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregador_data\";
 
     // Retorna o caminho para um tipo de dado com base no agregador atual
     static string CaminhoFicheiro(string tipo)
@@ -721,7 +721,7 @@ class Agregador
     static void MarcarWavysAssociadasComoDesligadas()
     {
         // Ficheiro com linhas: "WAVY_01:operação:AGREGADOR_01"
-        string path = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt";
+        string path = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt";
         if (!File.Exists(path))
             return;
 

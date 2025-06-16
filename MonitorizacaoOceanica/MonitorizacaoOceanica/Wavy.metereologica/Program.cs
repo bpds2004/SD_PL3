@@ -16,7 +16,7 @@ class WavyThv
     static bool ativo = true;
 
     // Ficheiro onde registamos o ID de cada Wavy que for iniciada
-    static string configFile = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\wavys_config.txt";
+    static string configFile = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\wavys_config.txt";
 
     // Dados de ligação (IP, Porta, e ID) do Agregador a que se liga
     static string agregadorIp;
@@ -109,7 +109,7 @@ class WavyThv
     /// lista as opções e espera que o user escolha uma.
     static (string, int, string) EscolherAgregador()
     {
-        string agregadoresFile = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
+        string agregadoresFile = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\agregadores_config.txt";
         if (!File.Exists(agregadoresFile))
         {
             Console.WriteLine("Nenhum agregador disponível.");
@@ -302,7 +302,7 @@ class WavyThv
     /// esta WAVY como operação, manutenção, etc. Se não encontrar, assume "operação".
     static string ObterEstadoDaWavyNoAgregador()
     {
-        string estadoPath = @"C:\Users\35196\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt";
+        string estadoPath = @"C:\Users\maria\source\repos\SD_PL3\MonitorizacaoOceanica\MonitorizacaoOceanica\estado_wavys.txt";
 
         // Se não existir o ficheiro, assumimos "operação"
         if (!File.Exists(estadoPath))
